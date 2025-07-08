@@ -83,6 +83,7 @@ import {
 import { NodeService } from './data-service/node-service';
 import { DeviceFarmApiClient } from './api-client';
 import { NodeHealthMonitor } from './utils/node-heath-monitor';
+import { sanitizeLog } from './helpers'; 
 
 const commandsQueueGuard = new AsyncLock();
 const NODE_HEALTH_MONITOR_INTERVAL = 1000 * 30; // 30 seconds
@@ -362,7 +363,7 @@ class DevicePlugin extends BasePlugin {
     /**
      *  Wait untill a free device is available for the given capabilities
      */
-    console.log(`Acquiring Lock with name ${this.getLockName(mergedCapabilites)}`);
+    console.log(sanitizeLog(`Acquiring Lock with name ${this.getLockName(mergedCapabilites)}`));
     const device = await commandsQueueGuard.acquire(
       this.getLockName(mergedCapabilites),
       async (): Promise<IDevice> => {
@@ -485,7 +486,9 @@ class DevicePlugin extends BasePlugin {
         log.info('Skipping dashboard report');
       }
       log.info(
-        `${pendingSessionId} 📱 Updating Device ${device.udid} with session ID ${sessionId}`,
+        sanitizeLog(
+          `📱 ${pendingSessionId} 📱 Updating Device ${device.udid} with session ID ${sessionId}`,
+        ),
       );
       if (device.platform.toLowerCase() === 'ios' && !isRemoteOrCloudSession) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -609,7 +612,7 @@ class DevicePlugin extends BasePlugin {
         keepAliveMsecs: 120000,
       }),
       httpsAgent: new https.Agent({
-        rejectUnauthorized: false,
+        rejectUnauthorized: true, // ✅ CWE-295 – Improper Certificate Validation
         keepAlive: true,
         keepAliveMsecs: 120000,
       }),

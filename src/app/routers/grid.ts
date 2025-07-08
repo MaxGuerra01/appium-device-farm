@@ -23,12 +23,14 @@ import {
   AuthenticatedRequest,
   authMiddleware,
 } from '../../auth/middleware/auth.middleware';
+import { sanitizeLog } from '../../helpers'; // if applicable
+
 
 const SERVER_UP_TIME = new Date().toISOString();
 
 async function getSavedDevices(request: Request, response: Response) {
   const devices = await prisma.device.findMany();
-  return response.json(devices);
+  return response.json(sanitizeLog(devices));
 }
 
 async function getDevices(request: Request, response: Response) {
@@ -37,9 +39,9 @@ async function getDevices(request: Request, response: Response) {
   let devices = await getAllDevices(filterOptions as any);
   const { sessionId } = request.query;
   if (sessionId) {
-    return response.json(devices.find((value) => value.session_id === sessionId));
+    return response.json(sanitizeLog(devices.find((value) => value.session_id === sessionId)));
   }
-  return response.json(devices);
+  return response.json(sanitizeLog(devices));
 }
 
 async function getDeviceByPlatform(request: Request, response: Response) {
@@ -60,7 +62,7 @@ async function getDeviceByPlatform(request: Request, response: Response) {
     devices = devices.filter((d) => d.state === 'Booted');
   }
 
-  return response.status(200).send(devices);
+  return response.status(200).send(sanitizeLog(devices));
 }
 
 async function registerDevice(request: Request, response: Response) {
@@ -84,7 +86,7 @@ async function updateDeviceInfo(request: Request, response: Response) {
   const { udid, ...deviceInfo } = requestBody;
   const devices = (await ATDRepository.DeviceModel).find({ udid });
   if (devices.length === 0) {
-    return response.status(404).send(`Device with udid ${udid} not found`);
+    return response.status(404).send(sanitizeLog(`Device with udid ${udid} not found`));
   }
   const device = devices[0];
   const updatedDevice = {
@@ -182,7 +184,7 @@ async function nodeAdbStatusOnOtherHost(
       response
         .status(404)
         .send(
-          `Host ${host} does not have any devices listed in database. I don't know how to forward request to that host`,
+          sanitizeLog(`Host ${host} does not have any devices listed in database. I don't know how to forward request to that host`),
         );
       return;
     }
@@ -190,7 +192,7 @@ async function nodeAdbStatusOnOtherHost(
 
     // if device is a cloud device, return error
     if (device.cloud) {
-      response.status(400).send('Getting status from cloud node is not supported');
+      response.status(400).send(sanitizeLog('Getting status from cloud node is not supported'));
       return;
     }
 
@@ -248,7 +250,7 @@ async function handleTestExecutionMetaData(req: Request, res: Response) {
   try {
     await saveTestExecutionMetaData(req);
     log.info('Saved Test Execution Meta Data.');
-    res.status(200).send('{"message": "Saved Test Execution Meta Data"}');
+    res.status(200).send(sanitizeLog('{"message": "Saved Test Execution Meta Data"}'));
   } catch (e) {
     const response = { message: `Failed to save Test Execution Meta Data. Error: ${e}` };
     log.error('Error while handling TestExecutionMetaData.');

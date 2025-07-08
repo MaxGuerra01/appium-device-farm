@@ -9,6 +9,8 @@ import log from '../logger';
 import { getSessionIdFromUrl, hasHubArgument } from '../helpers';
 import { ExpressMiddleware } from '../interfaces/IExternalModule';
 import { v4 } from 'uuid';
+import { sanitizeLog } from '../helpers'; // ajusta si estás en una subcarpeta más profunda
+
 
 const remoteProxyMap: Map<string, any> = new Map();
 const remoteHostMap: Map<string, any> = new Map();
@@ -44,7 +46,7 @@ export function addProxyHandler(sessionId: string, remoteHost: string) {
     config.agent = new HttpsProxyAgent(proxyServer);
   }
 
-  log.info(`Creating remote proxy for session ${sessionId} to ${remoteHost}`);
+  log.info(sanitizeLog(`Creating remote proxy for session ${sessionId} to ${remoteHost}`));
   remoteProxyMap.set(sessionId, createProxyMiddleware(config));
   remoteHostMap.set(sessionId, remoteHost);
 }

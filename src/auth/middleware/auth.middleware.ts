@@ -5,6 +5,8 @@ import { userService } from '../services/user.service';
 import { IPluginArgs } from '../../interfaces/IPluginArgs';
 import { authenticateUserWithAccessKey } from '../../utils/auth';
 import { v4 as uuidv4 } from 'uuid';
+import { sanitizeLog } from '../../helpers'; // ajusta si estás en una subcarpeta más profunda
+
 // JWT secret key - should be in environment variables in production
 const JWT_SECRET = process.env.JWT_SECRET || uuidv4();
 // JWT expiration time
@@ -58,7 +60,7 @@ export const authMiddleware = (pluginArgs: IPluginArgs) => {
     try {
       const authType = authHeader.split(' ')[0];
       const token = authHeader.split(' ')[1];
-      console.log(token);
+      console.log(sanitizeLog(token));
       if (!authType || !token) {
         return res.status(401).json({ message: 'Invalid authorization format' });
       }

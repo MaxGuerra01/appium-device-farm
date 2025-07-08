@@ -305,7 +305,11 @@ export class UserService {
       if (userCount === 0) {
         // Create default admin user
         const defaultAdminUsername = process.env.DEFAULT_ADMIN_USERNAME || 'admin';
-        const defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'admin';
+        const defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD; // CWE-259 Hardcoded Password
+
+        if (!defaultAdminPassword) {
+          throw new Error('DEFAULT_ADMIN_PASSWORD must be defined in environment variables');
+        }
 
         await this.createUser({
           username: defaultAdminUsername,

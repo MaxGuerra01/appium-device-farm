@@ -243,6 +243,9 @@ class UsbmuxdError extends Error {
  *
  * @public
  */
+import { sanitizeLog } from './helpers';
+
+
 function createListener(): net.Socket {
   const conn = net.connect(address);
   const req = protocol.listen;
@@ -259,7 +262,7 @@ function createListener(): net.Socket {
     }
 
     // subsequent responses report on connected device status:
-    console.log(msg);
+    console.log(sanitizeLog(msg));
     if (msg.MessageType === 'Attached') {
       devices[msg.Properties.SerialNumber] = msg.Properties;
       conn.emit('attached', msg.Properties.SerialNumber);
