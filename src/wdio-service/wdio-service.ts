@@ -6,6 +6,7 @@ import {
   updateHookEventInDB,
   updateTestEventInDB,
 } from '../data-service/test-execution-meta-data';
+import { sanitizeLog } from '../helpers';
 
 enum TestEvent {
   TestRunStarted = 'TestRunStarted',
@@ -18,7 +19,7 @@ const testEvents: any = {};
 
 async function saveTestExecutionMetaData(args: Request) {
   const metaData = args.body;
-  log.info(`handling test execution event - ${metaData.event_type}`);
+  console.info(`handling test execution event - ${sanitizeLog(metaData.event_type)}`);
   switch (metaData.event_type) {
     case TestEvent.TestRunStarted:
       testEvents[metaData.test_run.integrations.unknown_grid.session_id] = metaData.test_run.uuid;
@@ -43,7 +44,7 @@ async function saveTestExecutionMetaData(args: Request) {
 }
 
 async function getEventId(sessionId: string) {
-  console.log(JSON.stringify(testEvents), sessionId);
+  console.log(sanitizeLog(`Events: ${JSON.stringify(testEvents)} - Session: ${sessionId}`));
   return testEvents[sessionId] as string;
 }
 

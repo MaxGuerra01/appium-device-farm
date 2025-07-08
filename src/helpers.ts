@@ -264,3 +264,8 @@ export function getSessionIdFromUrl(url: string) {
   }
   return null;
 }
+
+export function sanitizeLog(input: any): string {
+  const str = typeof input === 'string' ? input : JSON.stringify(input);
+  return str.replace(/[\r\n]/g, '');
+}

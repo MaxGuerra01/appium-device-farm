@@ -9,6 +9,8 @@ import path from 'path';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import ip from 'ip';
+import { sanitizeLog } from '../../src/helpers'; 
+
 
 type PluginHarnessServerArgs = { subcommand: string; configFile: string };
 
@@ -57,22 +59,22 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
 
   async function goIosPath() {
     const appium_path = path.dirname(require.resolve('appium'));
-    console.log(`${info} appium_path: ${appium_path}`);
+    console.log(sanitizeLog(`${info} appium_path: ${appium_path}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     const node_modules_root = (await exec('npm', ['root', '-g'])).stdout.trim();
-    console.log(`${info} node_modules_root: ${node_modules_root}`);
+    console.log(sanitizeLog(`${info} node_modules_root: ${node_modules_root}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     const platform_name = process.platform;
     const arch_name = process.arch;
     const go_ios_dir = path.join(node_modules_root, 'go-ios');
     // find ios binary matching platform name
     let go_ios_bin = fs.readdirSync(go_ios_dir, { recursive: true }).find((item) => {
-      console.log(`${info} item: ${item}`);
+      console.log(sanitizeLog(`${info} item: ${item}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
       return item.includes(platform_name);
     });
-    console.log(`${info} platform: ${platform_name} arch: ${arch_name} go_ios_bin: ${go_ios_bin}`);
+    console.log(sanitizeLog(`${info} platform: ${platform_name} arch: ${arch_name} go_ios_bin: ${go_ios_bin}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     if (!go_ios_bin) {
       // throw new Error(`go-ios binary not found for platform ${platform_name}`);
       go_ios_bin = '';
-      console.log(`${warning} go-ios binary not found for platform ${platform_name}`);
+      console.log(sanitizeLog(`${warning} go-ios binary not found for platform ${platform_name}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     }
     const full_path = path.join(go_ios_dir, go_ios_bin.toString(), 'ios');
     return full_path;
@@ -94,7 +96,7 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
         env.APPIUM_HOME = appiumHome;
         //env.HOME = appiumHome;
         await appiumFs.mkdirp(appiumHome);
-        console.log(`${info} Set \`APPIUM_HOME\` to ${appiumHome}`);
+        console.log(sanitizeLog(`${info} Set \`APPIUM_HOME\` to ${appiumHome}`));//CWE-312: Cleartext Storage of Sensitive Information in Logs
       }
 
       // find go_ios from npm
@@ -109,26 +111,26 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
      */
     const installDriver = async (env: AppiumEnv) => {
       const APPIUM_BIN = getAppiumBin();
-      console.log(`${info} Checking if driver "${driverName}" is installed...`);
+      console.log(sanitizeLog(`${info} Checking if driver "${driverName}" is installed...`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
       const driverListArgs = [APPIUM_BIN, 'driver', 'list', '--json'];
-      console.log(`${info} Running: ${process.execPath} ${driverListArgs.join(' ')}`);
+      console.log(sanitizeLog(`${info} Running: ${process.execPath} ${driverListArgs.join(' ')}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
       const { stdout: driverListJson } = await exec(process.execPath, driverListArgs, {
         env,
       });
       const installedDrivers = JSON.parse(driverListJson);
 
       if (!installedDrivers[driverName]?.installed) {
-        console.log(`${warning} Driver "${driverName}" not installed; installing...`);
+        console.log(sanitizeLog(`${warning} Driver "${driverName}" not installed; installing...`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
         const driverArgs = [APPIUM_BIN, 'driver', 'install', '--source', driverSource, driverSpec];
         if (driverPackage) {
           driverArgs.push('--package', driverPackage);
         }
-        console.log(`${info} Running: ${process.execPath} ${driverArgs.join(' ')}`);
+        console.log(sanitizeLog(`${info} Running: ${process.execPath} ${driverArgs.join(' ')}`));
         await exec(process.execPath, driverArgs, {
           env,
         });
       }
-      console.log(`${success} Installed driver "${driverName}"`);
+      console.log(sanitizeLog(`${success} Installed driver "${driverName}"`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     };
 
     async function removePluginFromExtensionsYaml(env: AppiumEnv) {
@@ -139,10 +141,10 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
         'appium',
         'extensions.yaml',
       );
-      console.log(`${info} Removing plugin "${pluginName}" from ${extensionsYaml}`);
+      console.log(sanitizeLog(`${info} Removing plugin "${pluginName}" from ${extensionsYaml}`));//CWE-312: Cleartext Storage of Sensitive Information in Logs
       const extensions = yaml.load(fs.readFileSync(extensionsYaml, 'utf8')) as any;
       delete extensions.plugins[pluginName];
-      console.log(`${info} Writing back to ${extensionsYaml}`);
+      console.log(sanitizeLog(`${info} Writing back to ${extensionsYaml}`));//CWE-312: Cleartext Storage of Sensitive Information in Logs
       fs.writeFileSync(extensionsYaml, yaml.dump(extensions));
     }
 
@@ -175,22 +177,21 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
       if (pluginPackage) {
         pluginArgs.push('--package', pluginPackage);
       }
-
-      console.log(`${info} Installing plugin: ${process.execPath} ${pluginArgs.join(' ')}`);
+      console.log(sanitizeLog(`${info} Installing plugin: ${process.execPath} ${pluginArgs.join(' ')}`)); // CWE-312: Cleartext Storage of Sensitive Information in Logs
       await exec(process.execPath, pluginArgs, { env });
-      console.log(`${success} Installed plugin "${pluginName}"`);
+      console.log(sanitizeLog(`${success} Installed plugin "${pluginName}"`));
     };
 
     const createServer = async () => {
       if (!port) {
         port = await getPort();
       }
-      console.log(`${info} Will use port ${port} for Appium server`);
+      console.log(sanitizeLog(`${info} Will use port ${port} for Appium server`));// CWE-312: Cleartext Storage of Sensitive Information in Logs      
 
       // here we are using CLI (instead of AppiumServer) to prevent schema conflicts
       await runAppiumServerFromCli(env, [pluginName], [driverName], configFile);
       // use axios to wait until port is returning 200 OK
-      console.log(`${info} Waiting for Appium server to be ready...`);
+      console.log(sanitizeLog(`${info} Waiting for Appium server to be ready...`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     };
 
     async function runAppiumServerFromCli(
@@ -221,8 +222,8 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
       }
       const logFile = `${configFile.split('.json')[0]}.log`;
       serverArgs.push(`--log=${logFile}`);
-      console.log(`APPIUM_HOME=${env.APPIUM_HOME} GO_IOS=${env.GO_IOS}`);
-      console.log(`${info} Running: ${process.execPath} ${serverArgs.join(' ')}`);
+      console.log(sanitizeLog(`APPIUM_HOME=${env.APPIUM_HOME} GO_IOS=${env.GO_IOS}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
+      console.log(sanitizeLog(`${info} Running: ${process.execPath} ${serverArgs.join(' ')}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
 
       exec(process.execPath, serverArgs, {
         env,
@@ -243,7 +244,7 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
           return;
         } catch (ign: any) {
           // ignore
-          console.log(`${info} url: ${url} error: ${ign.message}`);
+          console.log(sanitizeLog(`${info} url: ${url} error: ${ign.message}`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
         }
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -268,10 +269,10 @@ export function pluginE2EHarness(opts: E2ESetupOpts & { enableGoIos?: boolean })
   // have an option to start the plugin before the test manually
   // this is useful to start multiple plugins in a single test
   if (before) {
-    console.log("Adding plugin startup into mocha's before hook");
+    console.log(sanitizeLog("Adding plugin startup into mocha's before hook"));// CWE-312: Cleartext Storage of Sensitive Information in Logs
     before(startPlugin);
   } else {
-    console.log(`Please start plugin ${pluginName} manually using "startPlugin()" function`);
+    console.log(sanitizeLog(`Please start plugin ${pluginName} manually using "startPlugin()" function`));// CWE-312: Cleartext Storage of Sensitive Information in Logs
   }
 
   return {

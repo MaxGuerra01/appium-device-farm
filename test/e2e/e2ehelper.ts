@@ -3,6 +3,7 @@ import path from 'path';
 import os from 'os';
 import ip from 'ip';
 import { DefaultPluginArgs, IPluginArgs } from '../../src/interfaces/IPluginArgs';
+import { sanitizeLog } from '../../src/helpers';
 
 const ifaces = os.networkInterfaces();
 /**
@@ -36,8 +37,8 @@ let alternateIp: string | undefined = availableIpAddresses.find((ip) => ip !== l
 
 if (alternateIp === undefined) alternateIp = localIp;
 
-console.log(`Using localIp: ${localIp}`);
-console.log(`Using alternateIp: ${alternateIp}`);
+console.log(sanitizeLog(`Using localIp: ${localIp}`));
+console.log(sanitizeLog(`Using alternateIp: ${alternateIp}`));
 
 export const HUB_APPIUM_PORT = 4723;
 export const NODE_APPIUM_PORT = 4724;
@@ -70,11 +71,11 @@ export function ensureAppiumHome(suffix = '', deleteExisting = true) {
   const extensionsYaml = path.join(newHome, 'node_modules', '.cache', 'appium', 'extensions.yaml');
   // log a warning as appium won't be able to install the plugin
   if (fs.existsSync(extensionsYaml)) {
-    console.log(
+    console.log(sanitizeLog(
       `WARNING: ${extensionsYaml} already exists. Appium won't be able to install the plugin`,
-    );
+    ));
     if (deleteExisting) {
-      console.log(`Deleting ${extensionsYaml}`);
+      console.log(sanitizeLog(`Deleting ${extensionsYaml}`));
       fs.unlinkSync(extensionsYaml);
     }
   }
