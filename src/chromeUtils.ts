@@ -39,12 +39,12 @@ const getModuleRoot = _.memoize(function getModuleRoot() {
       currentDir = path.dirname(currentDir);
       isAtFsRoot = currentDir.length <= path.dirname(currentDir).length;
     }
-    throw new Error(`Cannot find the root folder of the ${MODULE_NAME} Node.js module`);
+    throw new Error(`Cannot find the root folder of the ${MODULE_NAME} Node.js module');
   }
 
   const root = node.getModuleRootSync(MODULE_NAME, __filename);
   if (!root) {
-    throw new Error(`Cannot find the root folder of the ${MODULE_NAME} Node.js module`);
+    throw new Error(`Cannot find the root folder of the ${MODULE_NAME} Node.js module');
   }
   return root;
 });
@@ -64,7 +64,7 @@ async function formatCdVersion(ver: any) {
 
 async function getChromedriverBinaryPath(dir: any, osName = getOsName()) {
   const pathSuffix = osName === OS.windows ? '.exe' : '';
-  console.log(`${CD_EXECUTABLE_PREFIX}*${pathSuffix}`);
+  console.log(`${CD_EXECUTABLE_PREFIX}*${pathSuffix}');
   const paths = await fs.glob(`${CD_EXECUTABLE_PREFIX}*${pathSuffix}`, {
     cwd: dir,
     absolute: true,

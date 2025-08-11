@@ -192,7 +192,7 @@ export async function isDeviceFarmRunning(host: string): Promise<boolean> {
 
     return result.status == 200;
   } catch (error: any) {
-    log.info(`Device Farm is not running at ${host}. Error: ${error}`);
+    log.info('Device Farm is not running at . Error: ');
     return false;
   }
 }
@@ -211,7 +211,7 @@ export async function isAppiumRunningAt(url: string): Promise<boolean> {
 
     return result.status == 200;
   } catch (error: any) {
-    log.info(`Appium is not running at ${url}. Error: ${error}`);
+    log.info('Appium is not running at . Error:');
     return false;
   }
 }

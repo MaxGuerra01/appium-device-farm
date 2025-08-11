@@ -46,7 +46,7 @@ export default class IOSDeviceManager implements IDeviceManager {
         );
       } else if (deviceTypes.iosDeviceType === 'simulated') {
         const simulators = flatten(await Promise.all([this.getSimulators()]));
-        log.debug(`Simulators: ${JSON.stringify(simulators)}`);
+        log.debug('Simulators: ${JSON.stringify(simulators)}');
         return simulators;
       } else {
         // return both real and simulated devices
@@ -113,7 +113,7 @@ export default class IOSDeviceManager implements IDeviceManager {
         fs.copySync(theDerivedDataPath, tmpPath);
       } else {
         if (!fs.existsSync(tmpPath)) {
-          log.info(`DerivedDataPath for UDID ${udid} not set, so falling back to ${tmpPath}`);
+          log.info('DerivedDataPath for UDID ${udid} not set, so falling back to ${tmpPath}');
           log.info(
             `WDA will be build once and will use WDA Runner from path ${tmpPath}, second test run will skip the build process`,
           );
@@ -136,7 +136,7 @@ export default class IOSDeviceManager implements IDeviceManager {
       }
       return tmpPath;
     } else {
-      return path.join(os.homedir(), `Library/Developer/Xcode/DerivedData/WebDriverAgent-${udid}`);
+      return path.join(os.homedir(), `Library/Developer/Xcode/DerivedData/WebDriverAgent-${udid}');
     }
   }
 
@@ -150,14 +150,14 @@ export default class IOSDeviceManager implements IDeviceManager {
     await asyncForEach(devices, async (udid: string) => {
       const existingDevice = existingDeviceDetails.find((device) => device.udid === udid);
       if (existingDevice) {
-        log.info(`IOS Device details for ${udid} already available`);
+        log.info('IOS Device details for ${udid} already available');
         deviceState.push({
           ...existingDevice,
           busy: false,
           userBlocked: false,
         });
       } else {
-        log.debug(`Getting device info for ${udid}`);
+        log.debug('Getting device info for ${udid}');
         const deviceInfo = await this.getDeviceInfo(udid, pluginArgs, hostPort);
         const goIOS = process.env.GO_IOS;
         if (goIOS && semver.satisfies(deviceInfo.sdk, '>=17.0.0')) {
@@ -166,8 +166,8 @@ export default class IOSDeviceManager implements IDeviceManager {
             log.info('Running go-ios agent');
             const startTunnel = `${goIOS} tunnel start --userspace --udid=${udid}`;
             exec(startTunnel, (error, stdout, stderr) => {
-              console.log(`stdout: ${stdout}`);
-              console.error(`stderr: ${stderr}`);
+              console.log(`stdout: ${stdout}');
+              console.error(`stderr: ${stderr}');
             });
           } catch (err) {
             log.error(err);
@@ -191,24 +191,24 @@ export default class IOSDeviceManager implements IDeviceManager {
         nodeId: this.nodeId,
       };
       if (pluginArgs.hub !== undefined) {
-        log.info(`Updating Hub with iOS device ${udid}`);
+        log.info('Updating Hub with iOS device ${udid}');
         const nodeDevices = new NodeDevices(pluginArgs.hub);
         await nodeDevices.postDevicesToHub([deviceTracked], 'add');
       }
       // add device to local list
-      log.info(`iOS device with udid ${udid} plugged! updating device list...`);
+      log.info('iOS device with udid ${udid} plugged! updating device list...');
       await addNewDevice([deviceTracked], pluginArgs.bindHostOrIp);
     });
     iosTracker.on('detached', async (udid: string) => {
       const deviceRemoved: any = [{ udid, host: pluginArgs.bindHostOrIp }];
       if (pluginArgs.hub !== undefined) {
-        log.info(`iOS device with udid ${udid} unplugged! updating hub device list...`);
+        log.info('iOS device with udid ${udid} unplugged! updating hub device list...');
         const nodeDevices = new NodeDevices(pluginArgs.hub);
         await nodeDevices.postDevicesToHub(deviceRemoved, 'remove');
       }
 
       // remove device from local list
-      log.info(`iOS device with udid ${udid} unplugged! updating device list...`);
+      log.info('iOS device with udid ${udid} unplugged! updating device list...');
       await removeDevice(deviceRemoved);
     });
   }
@@ -297,10 +297,10 @@ export default class IOSDeviceManager implements IDeviceManager {
         return device.state === 'Booted';
       });
     }
-    //log.debug(`Filtered Simulators: ${JSON.stringify(filteredSimulators)}`);
+    //log.debug('Filtered Simulators: ${JSON.stringify(filteredSimulators)}');
 
     const buildSimulators = !isEmpty(filteredSimulators) ? filteredSimulators : flattenValued;
-    //log.debug(`Build Simulators: ${JSON.stringify(buildSimulators)}`);
+    //log.debug('Build Simulators: ${JSON.stringify(buildSimulators)}');
     const deviceTypes = await list.devicetypes;
     for await (const device of buildSimulators) {
       const productModel = IOSDeviceManager.getProductModel(deviceTypes, device);
@@ -373,14 +373,14 @@ export default class IOSDeviceManager implements IDeviceManager {
         .filter((runtime: any) => !runtime.isAvailable)
         .map((runtime: any) => runtime.name);
       if (unAavailableRuntimes.length > 0) {
-        log.error(`The following runtimes are not available: ${unAavailableRuntimes.join(', ')}`);
+        log.error('The following runtimes are not available: ${unAavailableRuntimes.join(', ')}');
       }
 
       const iOSSimulators = flatten(Object.values(await simctl.getDevices(null, 'iOS'))).length > 0;
       const tvSimulators = flatten(Object.values(await simctl.getDevices(null, 'tvOS'))).length > 0;
 
-      log.debug(`iOS Simulators: ${iOSSimulators}`);
-      log.debug(`tvOS Simulators: ${tvSimulators}`);
+      log.debug('iOS Simulators: ${iOSSimulators}');
+      log.debug('tvOS Simulators: ${tvSimulators}');
 
       let iosSimulators: any = [];
       let tvosSimulators: any = [];

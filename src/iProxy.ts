@@ -73,7 +73,7 @@ class iProxy {
     this.localServer.on('error', (e: any) => this.log.warn(e.message));
     this.localServer.once('close', (e: any) => {
       if (e) {
-        this.log.info(`The connection has been closed with error ${e.message}`);
+        this.log.info('The connection has been closed with error ');
       } else {
         this.log.info('The connection has been closed');
       }
@@ -130,7 +130,7 @@ class DeviceConnectionsFactory {
   _releaseProxiedConnections(connectionKeys: any) {
     const keys = connectionKeys.filter((k: any) => _.has(this._connectionsMapping[k], 'iproxy'));
     for (const key of keys) {
-      log.info(`Releasing the listener for '${key}'`);
+      log.info('Releasing the listener for connection');
       try {
         this._connectionsMapping[key].iproxy.stop();
       } catch (e) {
@@ -172,19 +172,17 @@ class DeviceConnectionsFactory {
     const { usePortForwarding, devicePort } = options;
 
     log.info(
-      `Requesting connection for device ${udid} on local port ${port}` +
-        (devicePort ? `, device port ${devicePort}` : ''),
-    );
-    log.debug(`Cached connections count: ${_.size(this._connectionsMapping)}`);
+      'Requesting connection for device on local port ');
+    log.debug('Cached connections count: ${_.size(this._connectionsMapping)}');
     const connectionsOnPort = this.listConnections(null, port);
     if (!_.isEmpty(connectionsOnPort)) {
-      log.info(`Found cached connections on port #${port}: ${JSON.stringify(connectionsOnPort)}`);
+      log.info('Found cached connections on port #');
     }
 
     if (usePortForwarding) {
       let isPortBusy = (await checkPortStatus(port, LOCALHOST)) === 'open';
       if (isPortBusy) {
-        log.warn(`Port #${port} is busy. Did you quit the previous driver session(s) properly?`);
+        log.warn('Port #${port} is busy. Did you quit the previous driver session(s) properly?');
         if (!_.isEmpty(connectionsOnPort)) {
           log.info('Trying to release the port');
           for (const key of this._releaseProxiedConnections(connectionsOnPort)) {
@@ -218,7 +216,7 @@ class DeviceConnectionsFactory {
     } else {
       this._connectionsMapping[currentKey] = {};
     }
-    log.info(`Successfully requested the connection for ${currentKey}`);
+    log.info('Successfully requested the connection for ');
   }
 
   private async waitForPortTobeReleased(port: any, isPortBusy: boolean) {
@@ -229,9 +227,7 @@ class DeviceConnectionsFactory {
           try {
             if ((await checkPortStatus(port, LOCALHOST)) !== 'open') {
               log.info(
-                `Port #${port} has been successfully released after ` +
-                  `${timer.getDuration().asMilliSeconds.toFixed(0)}ms`,
-              );
+                `Port # has been successfully released after ` );
               isPortBusy = false;
               return true;
             }
@@ -263,20 +259,20 @@ class DeviceConnectionsFactory {
       );
       return;
     }
-    log.info(`Releasing connections for ${udid || 'any'} device on ${port || 'any'} port number`);
+    log.info('Releasing connections for port number');
 
     const keys = this.listConnections(udid, port, true);
     if (_.isEmpty(keys)) {
       log.info('No cached connections have been found');
       return;
     }
-    log.info(`Found cached connections to release: ${JSON.stringify(keys)}`);
+    log.info('Found cached connections to release: ');
     this._releaseProxiedConnections(keys);
     for (const key of keys) {
       delete this._connectionsMapping[key];
     }
     await this.waitForPortTobeReleased(port, isPortBusy);
-    log.debug(`Cached connections count: ${_.size(this._connectionsMapping)}`);
+    log.debug('Cached connections count: ${_.size(this._connectionsMapping)}');
   }
 }
 

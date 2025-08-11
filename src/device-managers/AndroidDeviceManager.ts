@@ -62,7 +62,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
         return await cloud.getDevices();
       } else {
         devices = await this.fetchAndroidDevices(existingDeviceDetails, this.pluginArgs);
-        log.info(`Found ${devices.length} android devices`);
+        log.info('Found ${devices.length} android devices');
       }
 
       if (deviceTypes.androidDeviceType === 'real') {
@@ -78,7 +78,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
         return devices;
       }
     } catch (e) {
-      log.error(`Error while getting android devices. Error: ${e}`);
+      log.error('Error while getting android devices. Error: ${e}');
     }
     return [];
   }
@@ -87,7 +87,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
     await this.requireSdkRoot();
     const availableDevices: IDevice[] = [];
     const connectedDevices = await this.getConnectedDevices(pluginArgs);
-    //log.debug(`fetchAndroidDevices: ${JSON.stringify(connectedDevices)}`);
+    //log.debug('fetchAndroidDevices: ${JSON.stringify(connectedDevices)}');
 
     // for (const [adbInstance, devices] of connectedDevices) {
     //   for await (const device of devices) {
@@ -96,10 +96,10 @@ export default class AndroidDeviceManager implements IDeviceManager {
     // }
     for (const [adbInstance, devices] of connectedDevices) {
       log.debug(
-        `fetchAndroidDevices from host: ${adbInstance.adbHost}. Found ${devices.length} android devices`,
+        'fetchAndroidDevices from host: ${adbInstance.adbHost}. Found ${devices.length} android devices`,
       );
       for await (const device of devices) {
-        // log.info(`Checking device ${device.udid}`);
+        // log.info('Checking device ${device.udid}');
         device.adbRemoteHost =
           adbInstance.adbRemoteHost === null
             ? this.pluginArgs.bindHostOrIp
@@ -115,10 +115,10 @@ export default class AndroidDeviceManager implements IDeviceManager {
             (dev) => dev.udid === device.udid && dev.host.includes(this.pluginArgs.bindHostOrIp),
           );
           if (existingDevice) {
-            log.info(`Android Device details for ${device.udid} already available`);
+            log.info('Android Device details for ${device.udid} already available');
             availableDevices.push(existingDevice);
           } else {
-            log.info(`Android Device details for ${device.udid} not available. So querying now.`);
+            log.info('Android Device details for ${device.udid} not available. So querying now.');
             // device may have changed the status since the last time we queried
             // we want to avoid device with offline or unauthorized status
             if (device.state === 'device') {
@@ -129,17 +129,17 @@ export default class AndroidDeviceManager implements IDeviceManager {
                 this.hostPort,
               );
               if (!deviceInfo) {
-                log.info(`Cannot get device info for ${device.udid}. Skipping`);
+                log.info('Cannot get device info for ${device.udid}. Skipping');
               } else {
                 availableDevices.push(deviceInfo);
               }
             } else {
-              log.info(`Device ${device.udid} is not in "device" state. So, ignoring.`);
+              log.info('Device ${device.udid} is not in "device" state. So, ignoring.');
             }
           }
         } else {
-          // log.info(`Device ${device.udid} is already in list. So, ignoring.`);
-          // log.debug(`Current list of devices: ${JSON.stringify(availableDevices)}`);
+          // log.info('Device ${device.udid} is already in list. So, ignoring.');
+          // log.debug('Current list of devices: ${JSON.stringify(availableDevices)}');
         }
       }
     }
@@ -165,7 +165,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
         this.getDeviceSize(adbInstance, device.udid),
       ]);
     } catch (error) {
-      log.info(`Error while getting device info for ${device.udid}. Error: ${error}`);
+      log.info('Error while getting device info for ${device.udid}. Error: ${error}');
       return undefined;
     }
 
@@ -174,13 +174,13 @@ export default class AndroidDeviceManager implements IDeviceManager {
 
     // if cliArgs contains skipChromeDownload, then chromeDriverPath will be undefined
     if (!pluginArgs.skipChromeDownload && chromeDriverPath === undefined) {
-      log.info(`Cannot get chromeDriverPath for ${device.udid}. Skipping`);
+      log.info('Cannot get chromeDriverPath for ${device.udid}. Skipping');
       return undefined;
     }
 
     // Except for chromeDriverPath, all other info is mandatory
     if (_.isNil(sdk) || _.isNil(realDevice) || _.isNil(name)) {
-      log.info(`Cannot get device info for ${device.udid}. Skipping`);
+      log.info('Cannot get device info for ${device.udid}. Skipping');
       return undefined;
     }
 
@@ -266,7 +266,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
                 hasReadinessService = false;
                 return true;
               } else if (!_.includes(reason, SUBSYSTEM_STATE_OK)) {
-                log.debug(`Waiting for emulator startup. Intermediate error: ${err.message}`);
+                log.debug('Waiting for emulator startup. Intermediate error: ${err.message}');
               }
             }
             console.log('reason', reason);
@@ -301,7 +301,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
             services = await adbInstance.adbExec(['-s', udid, 'shell', 'service', 'list']);
             return requiredServicesRe.every((pattern) => pattern.test(services));
           } catch (err: any) {
-            log.debug(`Waiting for emulator startup. Intermediate error: ${err.message}`);
+            log.debug('Waiting for emulator startup. Intermediate error: ${err.message}');
             return false;
           }
         },
@@ -312,7 +312,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
       );
     } catch (e) {
       if (services) {
-        log.debug(`Recently listed services:\n${services}`);
+        log.debug('Recently listed services:\n${services}');
       }
       const missingServices = _.zip(REQUIRED_SERVICES, requiredServicesRe)
         .filter(([, pattern]) => !/** @type {RegExp} */ pattern?.test(services))
@@ -381,9 +381,9 @@ export default class AndroidDeviceManager implements IDeviceManager {
 
   public async onDeviceAdded(originalADB: any, device: DeviceWithPath) {
     const newDevice = { udid: device.id, state: device.type };
-    log.info(`Device ${newDevice.udid} was plugged. Detail: ${JSON.stringify(newDevice)}`);
+    log.info('Device ${newDevice.udid} was plugged. Detail: ${JSON.stringify(newDevice)}');
     if (newDevice.state != 'offline') {
-      log.info(`Device ${newDevice.udid} was plugged`);
+      log.info('Device ${newDevice.udid} was plugged');
       this.initiateAbortControl(newDevice.udid);
       let bootCompleted = false;
       try {
@@ -395,11 +395,11 @@ export default class AndroidDeviceManager implements IDeviceManager {
 
         await sleep(6000);
       } catch (error) {
-        log.info(`Device ${newDevice.udid} boot did not complete. Error: ${error}`);
+        log.info('Device ${newDevice.udid} boot did not complete. Error: ${error}');
       }
 
       if (!bootCompleted) {
-        log.info(`Device ${newDevice.udid} boot did not complete in time. Ignoring`);
+        log.info('Device ${newDevice.udid} boot did not complete in time. Ignoring');
         return;
       }
 
@@ -412,17 +412,17 @@ export default class AndroidDeviceManager implements IDeviceManager {
       );
 
       if (!trackedDevice) {
-        log.info(`Cannot get device info for ${newDevice.udid}. Skipping`);
+        log.info('Cannot get device info for ${newDevice.udid}. Skipping');
         return;
       }
 
-      log.info(`Adding device ${newDevice.udid} to list!`);
+      log.info('Adding device ${newDevice.udid} to list!');
       const deviceTracked = {
         ...trackedDevice,
         nodeId: this.nodeId,
       };
       if (this.pluginArgs.hub != undefined) {
-        log.info(`Updating Hub with device ${newDevice.udid}`);
+        log.info('Updating Hub with device ${newDevice.udid}');
         const nodeDevices = new NodeDevices(this.pluginArgs.hub);
         await nodeDevices.postDevicesToHub([deviceTracked], 'add');
       }
@@ -514,7 +514,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
         });
         remoteTracker.on('change', async (device: DeviceWithPath) => {
           if (device.type === 'offline' || device.type === 'unauthorized') {
-            log.info(`Device ${device.id} is ${device.type}. Removing from list`);
+            log.info('Device ${device.id} is ${device.type}. Removing from list');
             await this.onDeviceRemoved(device, pluginArgs);
           } else {
             await this.onDeviceAdded(originalADB, device);
@@ -549,7 +549,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
         return await chromeDriverManager.downloadChromeDriver(versionName);
       }
     } catch (err: any) {
-      log.warn(`Error '${err.message}' while dumping package info`);
+      log.warn('Error '${err.message}' while dumping package info');
     }
   }
 
@@ -573,20 +573,20 @@ export default class AndroidDeviceManager implements IDeviceManager {
     };
     try {
       const screenSize = await (await adbInstance).adbExec(['-s', udid, 'shell', 'wm', 'size']);
-      log.info(`Screen dimension for device ${udid} : ${screenSize}`);
+      log.info('Screen dimension for device ${udid} : ${screenSize}');
       const overrideMatch = screenSize.match(/Override size:\s*(\d+x\d+)/);
       const physicalMatch = screenSize.match(/Physical size:\s*(\d+x\d+)/);
       const dimension = overrideMatch ? overrideMatch[1] : physicalMatch ? physicalMatch[1] : null;
 
       if (dimension) {
-        log.info(`Parsed screen dimension for device ${udid} : ${dimension}`);
+        log.info('Parsed screen dimension for device ${udid} : ${dimension}');
         const [width, height] = dimension.split('x');
 
         device.screenWidth = width.trim();
         device.screenHeight = height.trim();
       }
     } catch (error) {
-      log.error(`Error while getting device property size for ${udid}. Error: ${error}`);
+      log.error('Error while getting device property size for ${udid}. Error: ${error}');
     }
     return device;
   }
@@ -599,7 +599,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
     try {
       return await (await adbInstance).adbExec(['-s', udid, 'shell', 'getprop', prop]);
     } catch (error) {
-      log.error(`Error while getting device property "${prop}" for ${udid}. Error: ${error}`);
+      log.error('Error while getting device property "${prop}" for ${udid}. Error: ${error}');
     }
   }
 
@@ -626,7 +626,7 @@ export default class AndroidDeviceManager implements IDeviceManager {
     }
     const stats = await fs.stat(sdkRoot!);
     if (!stats.isDirectory()) {
-      throw new Error(`The Android SDK root '${sdkRoot}' must be a folder. ${docMsg}`);
+      throw new Error(`The Android SDK root '${sdkRoot}' must be a folder. ${docMsg}');
     }
     return sdkRoot;
   }

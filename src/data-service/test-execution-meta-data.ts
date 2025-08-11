@@ -21,7 +21,7 @@ async function createTestEventInDB(testMetaData: any) {
     });
     log.info('TestRunStarted event is saved to DB');
   } catch (e) {
-    log.error(`TestRunStarted event processing Failed  -- ${e}`);
+    log.error('TestRunStarted event processing Failed  -- ${e}');
     throw e;
   }
 }
@@ -40,7 +40,7 @@ async function updateTestEventInDB(testMetaData: any) {
     });
     log.info('TestRunFinished event is saved to DB');
   } catch (e) {
-    log.error(`TestRunFinished event processing Failed  -- ${e}`);
+    log.error('TestRunFinished event processing Failed  -- ${e}');
     throw e;
   }
 }
@@ -65,7 +65,7 @@ async function createHookEventInDB(testMetaData: any) {
     });
     log.info('HookRunStarted event is saved to DB');
   } catch (e) {
-    log.error(`HookRunStarted event processing Failed  -- ${e}`);
+    log.error('HookRunStarted event processing Failed  -- ${e}');
     throw e;
   }
 }
@@ -84,7 +84,7 @@ async function updateHookEventInDB(testMetaData: any) {
     });
     log.info('HookRunFinished event is saved to DB');
   } catch (e) {
-    log.error(`HookRunFinished event processing Failed  -- ${e}`);
+    log.error('HookRunFinished event processing Failed  -- ${e}');
     throw e;
   }
 }

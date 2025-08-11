@@ -29,7 +29,7 @@ export class TeamService {
 
       return team;
     } catch (error) {
-      log.error(`Error creating team: ${error}`);
+      log.error('Error creating team: ${error}');
       throw error;
     }
   }
@@ -58,7 +58,7 @@ export class TeamService {
 
       return teams;
     } catch (error) {
-      log.error(`Error getting teams: ${error}`);
+      log.error('Error getting teams: ${error}');
       throw error;
     }
   }
@@ -92,7 +92,7 @@ export class TeamService {
 
       return team;
     } catch (error) {
-      log.error(`Error getting team: ${error}`);
+      log.error('Error getting team: ${error}');
       throw error;
     }
   }
@@ -122,7 +122,7 @@ export class TeamService {
 
       return updatedTeam;
     } catch (error) {
-      log.error(`Error updating team: ${error}`);
+      log.error('Error updating team: ${error}');
       throw error;
     }
   }
@@ -138,7 +138,7 @@ export class TeamService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error deleting team: ${error}`);
+      log.error('Error deleting team: ${error}');
       throw error;
     }
   }
@@ -209,7 +209,7 @@ export class TeamService {
 
       return createdTeamMembers;
     } catch (error) {
-      log.error(`Error adding users to team: ${error}`);
+      log.error('Error adding users to team: ${error}');
       throw error;
     }
   }
@@ -231,7 +231,7 @@ export class TeamService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error removing users from team: ${error}`);
+      log.error('Error removing users from team: ${error}');
       throw error;
     }
   }
@@ -296,7 +296,7 @@ export class TeamService {
 
       return createdTeamDevices;
     } catch (error) {
-      log.error(`Error adding devices to team: ${error}`);
+      log.error('Error adding devices to team: ${error}');
       throw error;
     }
   }
@@ -318,7 +318,7 @@ export class TeamService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error removing devices from team: ${error}`);
+      log.error('Error removing devices from team: ${error}');
       throw error;
     }
   }
@@ -343,7 +343,7 @@ export class TeamService {
 
       return teamMembers.map((member) => member.team);
     } catch (error) {
-      log.error(`Error getting teams for user: ${error}`);
+      log.error('Error getting teams for user: ${error}');
       throw error;
     }
   }

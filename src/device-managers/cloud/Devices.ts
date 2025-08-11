@@ -70,7 +70,7 @@ export default class Devices {
     const v = new Validator();
     const validationResult = v.validate(this.cloud, schema);
     if (validationResult.errors.length) {
-      throw new Error(`🔴 Invalid server config ${validationResult.errors} 🔴`);
+      throw new Error(`🔴 Invalid server config ${validationResult.errors} 🔴');
     } else logger.info('Loading devices from server config');
   }
 

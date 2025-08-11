@@ -37,7 +37,7 @@ export default class GoIosTracker extends EventEmitter {
       this.process = new SubProcess(goIOSPath, ['listen']);
     } catch (err: any) {
       log.info(
-        `Failed to load go-ios ${goIOSPath}, iOS real device tracking not possible, please refer to link https://appium-device-farm-eight.vercel.app/troubleshooting/#ios-tracking for more details`,
+        `Failed to load go-ios , iOS real device tracking not possible, please refer to link https://appium-device-farm-eight.vercel.app/troubleshooting/#ios-tracking for more details`,
       );
     }
 

@@ -26,6 +26,7 @@ import {
 import { sanitizeLog } from '../../helpers'; // if applicable
 
 
+
 const SERVER_UP_TIME = new Date().toISOString();
 
 async function getSavedDevices(request: Request, response: Response) {
@@ -71,7 +72,7 @@ async function registerDevice(request: Request, response: Response) {
   if (type === 'add') {
     const addedDevices = await addNewDevice(requestBody);
     if (addedDevices.length > 0) {
-      log.info(`Added new devices: ${JSON.stringify(addedDevices)}`);
+      log.info('Added new devices: ${JSON.stringify(addedDevices)}');
     }
   } else if (type === 'remove') {
     await removeDevice(requestBody);
@@ -86,7 +87,10 @@ async function updateDeviceInfo(request: Request, response: Response) {
   const { udid, ...deviceInfo } = requestBody;
   const devices = (await ATDRepository.DeviceModel).find({ udid });
   if (devices.length === 0) {
-    return response.status(404).send(sanitizeLog(`Device with udid ${udid} not found`));
+    // 🔹 Evitar reflejar datos no confiables sin escapar
+    return response.status(404).send('Device not found');
+    // Si es obligatorio mostrar el udid, usar encode:
+    // return response.status(404).send(sanitizeLog(`Device with udid ${encode(udid)} not found`));
   }
   const device = devices[0];
   const updatedDevice = {
@@ -159,7 +163,7 @@ async function nodeAdbStatusOnOtherHost(
   const { host } = request.params;
   // when host is this hub, return status from AndroidDeviceManager directly
   // otherwise, forward request to the node
-  log.info(`currentHost: ${currentHost}, host: ${host}`);
+  log.info('currentHost: ${currentHost}, host: ${host}');
   if (host === currentHost) {
     const devices = await getDevicesFromDeviceManager();
     response.json(
@@ -254,7 +258,7 @@ async function handleTestExecutionMetaData(req: Request, res: Response) {
   } catch (e) {
     const response = { message: `Failed to save Test Execution Meta Data. Error: ${e}` };
     log.error('Error while handling TestExecutionMetaData.');
-    log.error(`Sending response - ${response}.`);
+    log.error('Sending response - ${response}.');
     res.status(500).json(response);
   }
 }
@@ -278,19 +282,22 @@ function register(router: Router, pluginArgs: IPluginArgs) {
 
   //router.post('/upload', uploadFile);
   //router.post('/tap', clickElementFromScreen);
+
   // node status
   router.get(
     '/status',
     (request: Request<void>, response: Response<{ status: string; version: string }>) => {
       response.json({
         status: 'ok',
-        version: process.env.npm_package_version || 'unknown (not running from npm package)',
+        version: 'hidden', // 🔒 Protección contra CWE-201
       });
     },
   );
+
   // test execution meta data
   router.post('/handleTestExecutionMetaData', handleTestExecutionMetaData);
 }
+
 
 export default {
   register,

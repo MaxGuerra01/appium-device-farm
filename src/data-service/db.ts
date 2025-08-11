@@ -30,7 +30,7 @@ export class ATDRepository {
 
   private static dbname() {
     const appium_home = process.env.APPIUM_HOME || './temp-appium';
-    // log.debug(`Using database file: ${appium_home}/db.json`);
+    // log.debug('Using database file: ${appium_home}/db.json');
     return `${appium_home}/db.json`;
   }
 
@@ -59,7 +59,7 @@ export class ATDRepository {
 
     if (existingDb) return existingDb.db;
 
-    log.debug(`Creating new database: ${ATDRepository.dbname()}`);
+    log.debug('Creating new database: ${ATDRepository.dbname()}');
 
     const db = await new Promise<loki>((resolve, reject) => {
       const db = new loki(ATDRepository.dbname(), {
@@ -71,7 +71,7 @@ export class ATDRepository {
       });
 
       db.on('error', (err) => {
-        log.error(`Error in database: ${err}`);
+        log.error('Error in database: ${err}');
         reject(err);
       });
 

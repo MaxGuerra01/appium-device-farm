@@ -31,7 +31,7 @@ export class NodeHealthMonitor {
     const offlineNodes = [];
     for (const node of nodes) {
       if (!(await isDeviceFarmRunning(node.host))) {
-        log.warn(`Node ${node.id} with host ${node.host} is not running`);
+        log.warn('Node ${node.id} with host ${node.host} is not running');
         offlineNodes.push(node.id);
       }
     }

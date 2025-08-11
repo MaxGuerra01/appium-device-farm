@@ -65,7 +65,7 @@ export async function removeDevice(devices: IDevice[]) {
   });
 
   for await (const device of devices) {
-    log.info(`Removing device ${device.udid} from host ${device.host} from device list.`);
+    log.info('Removing device from host from device list.');
     (await ATDRepository.DeviceModel)
       .chain()
       .find({ udid: device.udid, host: { $contains: device.host } })
@@ -155,10 +155,10 @@ export async function addNewDevice(devices: IDevice[], host?: string): Promise<I
         });
         return device;
       } catch (error) {
-        log.warn(`Unable to add device "${device.udid}" to database. Reason: ${error}`);
+        log.warn('Unable to add device "${device.udid}" to database. Reason: ${error}');
       }
     } else {
-      debugLog(`Device "${device.udid}" already exists in database`);
+      debugLog('Device "${device.udid}" already exists in database');
     }
   });
 
@@ -166,9 +166,9 @@ export async function addNewDevice(devices: IDevice[], host?: string): Promise<I
   const result = (await Promise.all(addedDevices)).filter((device): device is IDevice =>
     Boolean(device),
   );
-  log.debug(`Added ${result.length} new devices to local database`);
+  log.debug('Added ${result.length} new devices to local database');
 
-  debugLog(`Added devices: ${JSON.stringify(result)}`);
+  debugLog('Added devices: ${JSON.stringify(result)}');
   // for (const iDevice of result) {
   //   await setDeviceState(iDevice);
   // }
@@ -288,13 +288,13 @@ export async function getDevices(filterOptions: IDeviceFilterOptions): Promise<I
           filter.platform = filterOptions.platform;
           break;
         case 'platformVersion':
-          log.debug(`platformVersion: ${filterOptions.platformVersion}`);
+          log.debug('platformVersion: ${filterOptions.platformVersion}');
           // eslint-disable-next-line no-case-declarations
           const coercedPlatformVersion = semver.coerce(filterOptions.platformVersion);
 
           results = results.where(function (obj: IDevice) {
             const coercedSDK = semver.coerce(obj.sdk);
-            // log.debug(`coerced obj SDK: ${coercedSDK}`);
+            // log.debug('coerced obj SDK: ${coercedSDK}');
             if (coercedSDK && coercedPlatformVersion) {
               /*log.debug(
                 `coerced obj SDK: ${coercedSDK} == coercedPlatformVersion: ${coercedPlatformVersion}`,
@@ -335,13 +335,13 @@ export async function getDevices(filterOptions: IDeviceFilterOptions): Promise<I
           break;
         case 'minSDK':
           if (semver.coerce(filterOptions.minSDK)) {
-            // log.debug(`minSDK: ${filterOptions.minSDK}`);
+            // log.debug('minSDK: ${filterOptions.minSDK}');
             const coercedMinSDK = semver.coerce(filterOptions.minSDK);
             results = results.where(function (obj: IDevice) {
               const coercedSDK = semver.coerce(obj.sdk);
 
               if (coercedSDK && coercedMinSDK) {
-                // log.debug(`coerced obj SDK: ${coercedSDK} >= coercedMinSDK: ${coercedMinSDK}`);
+                // log.debug('coerced obj SDK: ${coercedSDK} >= coercedMinSDK: ${coercedMinSDK}');
                 return semver.gte(coercedSDK, coercedMinSDK);
               }
               return false;
@@ -350,11 +350,11 @@ export async function getDevices(filterOptions: IDeviceFilterOptions): Promise<I
           break;
         case 'maxSDK':
           if (semver.coerce(filterOptions.maxSDK)) {
-            // log.debug(`maxSDK: ${filterOptions.maxSDK}`);
+            // log.debug('maxSDK: ${filterOptions.maxSDK}');
             const coercedMaxSDK = semver.coerce(filterOptions.maxSDK);
             results = results.where(function (obj: IDevice) {
               const coercedSDK = semver.coerce(obj.sdk);
-              // log.debug(`coerced obj SDK: ${coercedSDK}`);
+              // log.debug('coerced obj SDK: ${coercedSDK}');
               if (coercedSDK && coercedMaxSDK) {
                 return semver.lte(coercedSDK, coercedMaxSDK);
               }
@@ -384,16 +384,16 @@ export async function getDevices(filterOptions: IDeviceFilterOptions): Promise<I
     }
   }
 
-  log.info(`Updated devices with filter: ${JSON.stringify(filter)}`);
+  log.info('Updated devices with filter: ${JSON.stringify(filter)}');
   const matchingDevices = results.find(filter).data();
   // use the following debugging tools to debug this function
-  debugLog(`basic filter: ${JSON.stringify(basicFilter)}`);
-  debugLog(`all devices: ${JSON.stringify(deviceModel.chain().find().data())}`);
+  debugLog('basic filter: ${JSON.stringify(basicFilter)}');
+  debugLog('all devices: ${JSON.stringify(deviceModel.chain().find().data())}');
   debugLog(
     `basic filter applied devices: ${JSON.stringify(deviceModel.chain().find(basicFilter).data())}`,
   );
-  debugLog(`filter: ${JSON.stringify(filter)}`);
-  debugLog(`results: ${JSON.stringify(matchingDevices)}`);
+  debugLog('filter: ${JSON.stringify(filter)}');
+  debugLog('results: ${JSON.stringify(matchingDevices)}');
   if (filterOptions.userId) {
     const filteredDevices = await filterDeviceForUser(filterOptions.userId, matchingDevices);
     debugLog(
@@ -416,7 +416,7 @@ export async function getDevices(filterOptions: IDeviceFilterOptions): Promise<I
  */
 export async function getDevice(filterOptions: IDeviceFilterOptions): Promise<IDevice | undefined> {
   const devices = await getDevices(filterOptions);
-  // log.debug(`getDevice devices: ${JSON.stringify(devices)}`);
+  // log.debug('getDevice devices: ${JSON.stringify(devices)}');
   if (devices.length === 0) {
     return undefined;
   } else {
@@ -425,7 +425,7 @@ export async function getDevice(filterOptions: IDeviceFilterOptions): Promise<ID
 }
 
 export async function updatedAllocatedDevice(device: IDevice, updateData: Partial<IDevice>) {
-  log.info(`Updating allocated device: "${JSON.stringify(device)}"`);
+  log.info('Updating allocated device: "${JSON.stringify(device)}"');
   (await ATDRepository.DeviceModel)
     .chain()
     .find({ udid: device.udid, host: device.host })
@@ -438,7 +438,7 @@ export async function updatedAllocatedDevice(device: IDevice, updateData: Partia
     .chain()
     .find({ udid: device.udid, host: device.host })
     .data();
-  log.info(`Updated allocated device: "${JSON.stringify(updatedDevicestatus)}"`);
+  log.info('Updated allocated device: "${JSON.stringify(updatedDevicestatus)}"');
 }
 
 export async function updateCmdExecutedTime(sessionId: string) {
@@ -446,7 +446,7 @@ export async function updateCmdExecutedTime(sessionId: string) {
     .chain()
     .find({ session_id: sessionId })
     .update(function (device: IDevice) {
-      log.debug(`Updating lastCmdExecutedAt for device ${device.udid} in session ${sessionId}`);
+      log.debug('Updating lastCmdExecutedAt for device ${device.udid} in session ${sessionId}');
       device.lastCmdExecutedAt = new Date().getTime();
     });
 }
@@ -509,7 +509,7 @@ export async function unblockDeviceMatchingFilter(filter: object) {
   }
 
   if (devices !== undefined) {
-    debugLog(`Found ${devices.length} devices to unblock with filter ${JSON.stringify(filter)}`);
+    debugLog('Found ${devices.length} devices to unblock with filter ${JSON.stringify(filter)}');
 
     await Promise.all(
       devices.map(async (device) => {
@@ -529,7 +529,7 @@ export async function unblockDeviceMatchingFilter(filter: object) {
             return data.udid === device.udid && data.host === device.host;
           },
           function (device: IDevice) {
-            debugLog(`Unblocking device ${device.udid} from host ${device.host}`);
+            debugLog('Unblocking device ${device.udid} from host ${device.host}');
             device.session_id = undefined;
             device.sessionResponse = undefined;
             device.busy = false;
@@ -542,13 +542,13 @@ export async function unblockDeviceMatchingFilter(filter: object) {
           },
         );
 
-        debugLog(`Unblocked device ${device.udid} from host ${device.host}`);
+        debugLog('Unblocked device ${device.udid} from host ${device.host}');
       }),
     ).catch((error) => {
-      log.error(`Unable to unblock device. Reason: ${error}`);
+      log.error('Unable to unblock device. Reason: ${error}');
     });
   } else {
-    log.warn(`Unable to find device to unblock with filter ${JSON.stringify(filter)}`);
+    log.warn('Unable to find device to unblock with filter ${JSON.stringify(filter)}');
   }
 }
 export async function updateDeviceName(host: string, udid: string, name: string): Promise<boolean> {
@@ -562,10 +562,10 @@ export async function updateDeviceName(host: string, udid: string, name: string)
       .update(function (device: IDevice) {
         device.name = name;
       });
-    log.info(`Updated name for device ${udid} to ${name}`);
+    log.info('Updated name for device ${udid} to ${name}');
     return true;
   }
 
-  log.warn(`Device ${udid} not found for name update`);
+  log.warn('Device ${udid} not found for name update');
   return false;
 }

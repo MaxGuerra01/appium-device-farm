@@ -88,7 +88,7 @@ export const authMiddleware = (pluginArgs: IPluginArgs) => {
 
       next();
     } catch (error) {
-      log.error(`Authentication error: ${error}`);
+      log.error('Authentication error: ${error}');
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
   };

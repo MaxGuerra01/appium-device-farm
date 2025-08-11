@@ -58,7 +58,7 @@ export class DeviceAllocationService {
 
       return allocation;
     } catch (error) {
-      log.error(`Error allocating device to team: ${error}`);
+      log.error('Error allocating device to team: ${error}');
       throw error;
     }
   }
@@ -89,7 +89,7 @@ export class DeviceAllocationService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error deallocating device from team: ${error}`);
+      log.error('Error deallocating device from team: ${error}');
       throw error;
     }
   }
@@ -107,7 +107,7 @@ export class DeviceAllocationService {
 
       return allocations;
     } catch (error) {
-      log.error(`Error getting device allocations: ${error}`);
+      log.error('Error getting device allocations: ${error}');
       throw error;
     }
   }
@@ -125,7 +125,7 @@ export class DeviceAllocationService {
 
       return allocations;
     } catch (error) {
-      log.error(`Error getting device allocations for team: ${error}`);
+      log.error('Error getting device allocations for team: ${error}');
       throw error;
     }
   }
@@ -146,7 +146,7 @@ export class DeviceAllocationService {
 
       return allocations.map((allocation) => allocation.team);
     } catch (error) {
-      log.error(`Error getting teams for device: ${error}`);
+      log.error('Error getting teams for device: ${error}');
       throw error;
     }
   }
@@ -194,7 +194,7 @@ export class DeviceAllocationService {
 
       return allocations.length > 0;
     } catch (error) {
-      log.error(`Error checking user access to device: ${error}`);
+      log.error('Error checking user access to device: ${error}');
       throw error;
     }
   }
@@ -249,7 +249,7 @@ export class DeviceAllocationService {
       const deviceModel = await ATDRepository.DeviceModel;
       return deviceModel.find({ id: { $in: deviceIds } });
     } catch (error) {
-      log.error(`Error getting accessible devices for user: ${error}`);
+      log.error('Error getting accessible devices for user: ${error}');
       throw error;
     }
   }

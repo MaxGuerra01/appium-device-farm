@@ -33,7 +33,7 @@ export function addProxyHandler(sessionId: string, remoteHost: string) {
     on: {
       proxyReq: fixRequestBody,
       proxyRes: (proxyRes: any, req: any, res: any) => {
-        // log.debug(`proxyRes host: ${req.headers.host} method: ${req.method}  path: ${req.url}`);
+        // log.debug('proxyRes host: ${req.headers.host} method: ${req.method}  path: ${req.url}');
       },
       error: (err: any, req: any, res: any) => {
         log.error('proxy handler error: ', err.message, ' data: ', err?.response?.data);
@@ -42,7 +42,7 @@ export function addProxyHandler(sessionId: string, remoteHost: string) {
   };
 
   if (proxyServer) {
-    //log.info(`Added proxy to createProxyMiddleware: ${JSON.stringify(proxyServer)}`);
+    //log.info('Added proxy to createProxyMiddleware: ${JSON.stringify(proxyServer)}');
     config.agent = new HttpsProxyAgent(proxyServer);
   }
 

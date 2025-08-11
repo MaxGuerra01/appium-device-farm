@@ -100,7 +100,7 @@ export async function allocateDeviceForSession(
   pluginArgs: IPluginArgs,
 ): Promise<IDevice> {
   const firstMatch = Object.assign({}, capability.firstMatch[0], capability.alwaysMatch);
-  debugLog(`firstMatch: ${JSON.stringify(firstMatch)}`);
+  debugLog('firstMatch: ${JSON.stringify(firstMatch)}');
   const deviceFarmCapabilities = getDeviceFarmCapabilities(capability);
   const filters = getDeviceFiltersFromCapability(firstMatch, deviceFarmCapabilities, pluginArgs);
 
@@ -124,7 +124,7 @@ export async function allocateDeviceForSession(
     }
   }
 
-  debugLog(`Device allocation request for filter: ${JSON.stringify(filters)}`);
+  debugLog('Device allocation request for filter: ${JSON.stringify(filters)}');
   const timeout =
     deviceFarmCapabilities[DEVICE_FARM_CAPABILITIES.DEVICE_TIMEOUT] || deviceTimeOutMs;
   const intervalBetweenAttempts =
@@ -146,13 +146,13 @@ export async function allocateDeviceForSession(
         }
         const maxSessions = getDeviceManager().getMaxSessionCount();
         const busyDevicesCount = await getBusyDevicesCount();
-        log.debug(`Max session count: ${maxSessions}, Busy device count: ${busyDevicesCount}`);
+        log.debug('Max session count: ${maxSessions}, Busy device count: ${busyDevicesCount}');
         if (maxSessions !== undefined && busyDevicesCount === maxSessions) {
           log.info(
-            `Waiting for session available, already at max session count of: ${maxSessions}`,
+            `Waiting for session available, already at max session count of`,
           );
           return false;
-        } else log.info(`Waiting for free device. Filter: ${JSON.stringify(filters)}}`);
+        } else log.info('Waiting for free device. Filters ');
         return (await getDevice(filters)) != undefined;
       },
       { timeout, intervalBetweenAttempts },
@@ -183,9 +183,9 @@ export async function allocateDeviceForSession(
 
   const device = await getDevice(filters);
   if (device != undefined) {
-    // log.info(`📱 Device found: ${JSON.stringify(device)}`);
+    // log.info('📱 Device found: ${JSON.stringify(device)}');
     await blockDevice(device.udid, device.host);
-    log.info(`📱 Blocking device ${device.udid} at host ${device.host} for new session`);
+    log.info('📱 Blocking device at host for new session');
 
     // update newCommandTimeout for the device.
     // This is required so it won't get unblocked by prematurely.
@@ -267,7 +267,7 @@ async function getStorage() {
   try {
     Container.get('LocalStorage');
   } catch (err) {
-    log.error(`Failed to get LocalStorage: Error ${err}`);
+    log.error('Failed to get LocalStorage: Error ${err}');
     await initializeStorage();
   }
   return Container.get('LocalStorage') as LocalStorage;
@@ -378,7 +378,7 @@ export async function updateDeviceList(host: string, hubArgument?: string): Prom
         return [];
       }
 
-      // log.debug(`Updating device list with ${JSON.stringify(devices)} devices`);
+      // log.debug('Updating device list with ${JSON.stringify(devices)} devices');
 
       // first thing first. Update device list in local list
       await addNewDevice(devices, host);
@@ -386,7 +386,7 @@ export async function updateDeviceList(host: string, hubArgument?: string): Prom
       try {
         await nodeDevices.postDevicesToHub(devices, 'add');
       } catch (error) {
-        log.error(`Cannot send device list update. Reason: ${error}`);
+        log.error('Cannot send device list update. Reason: ${error}');
       }
       return devices;
     } else {
@@ -489,7 +489,7 @@ export async function removeStaleDevices(currentHost: string) {
 export async function unblockCandidateDevices() {
   const allDevices = await getAllDevices();
   return allDevices.filter((device) => {
-    // log.debug(`Checking if device ${device.udid} from ${device.host} is a candidate to be released: ${isCandidate}`);
+    // log.debug('Checking if device ${device.udid} from ${device.host} is a candidate to be released: ${isCandidate}');
     return device.busy && !device.userBlocked && device.lastCmdExecutedAt != undefined;
   });
 }
@@ -497,7 +497,7 @@ export async function unblockCandidateDevices() {
 export async function releaseBlockedDevices(newCommandTimeout: number) {
   const busyDevices = await unblockCandidateDevices();
 
-  log.debug(`Found ${busyDevices.length} device candidates to be released`);
+  log.debug('Found ${busyDevices.length} device candidates to be released');
 
   busyDevices.forEach(function (device) {
     // need to keep this to make typescript happy. good thing tho.
@@ -512,7 +512,7 @@ export async function releaseBlockedDevices(newCommandTimeout: number) {
     if (timeSinceLastCmdExecuted > timeoutSeconds) {
       // unblock regardless of whether the device has session or not
       log.info(
-        `Unblocking device ${device.udid} at host ${device.host} because it has been idle for ${timeSinceLastCmdExecuted} seconds`,
+        `Unblocking device  at host  because it has been idle for seconds`,
       );
       unblockDevice(device.udid, device.host);
     }
@@ -543,7 +543,7 @@ export async function setupCronUpdateDeviceList(
     clearInterval(cronTimerToUpdateDevices);
   }
   log.info(
-    `This node will send device list update to the hub (${hubArgument}) every ${intervalMs} ms`,
+    `This node will send device list update to the hub () every ms`,
   );
 
   const fn = async () => {
@@ -575,17 +575,17 @@ export async function cleanPendingSessions(timeoutMs: number) {
   if (timedOutSessions.length === 0) {
     log.debug('No pending sessions to clean');
   } else {
-    log.debug(`Found ${timedOutSessions.length} pending sessions to clean`);
+    log.debug('Found ${timedOutSessions.length} pending sessions to clean');
   }
   for await (const session of timedOutSessions) {
-    log.debug(`Removing pending session ${session.capability_id} because it has timed out`);
+    log.debug('Removing pending session ${session.capability_id} because it has timed out');
     (await ATDRepository.PendingSessionsModel).remove(session);
   }
 }
 
 export async function setupCronCleanPendingSessions(intervalMs: number, timeoutMs: number) {
   log.info(
-    `Hub will clean pending sessions every ${intervalMs} ms with pending session timeout: ${timeoutMs} ms`,
+    `Hub will clean pending sessions every ms with pending session timeout:  ms`,
   );
   if (cronTimerToCleanPendingSessions) {
     clearInterval(cronTimerToCleanPendingSessions);

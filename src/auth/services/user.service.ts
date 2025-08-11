@@ -62,7 +62,7 @@ export class UserService {
         accessKey: user.accessKey,
       };
     } catch (error) {
-      log.error(`Error creating user: ${error}`);
+      log.error('Error creating user: ${error}');
       throw error;
     }
   }
@@ -116,7 +116,7 @@ export class UserService {
         },
       };
     } catch (error) {
-      log.error(`Error during login: ${error}`);
+      log.error('Error during login: ${error}');
       throw error;
     }
   }
@@ -153,7 +153,7 @@ export class UserService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error changing password: ${error}`);
+      log.error('Error changing password: ${error}');
       throw error;
     }
   }
@@ -178,7 +178,7 @@ export class UserService {
 
       return users;
     } catch (error) {
-      log.error(`Error getting users: ${error}`);
+      log.error('Error getting users: ${error}');
       throw error;
     }
   }
@@ -209,7 +209,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      log.error(`Error getting user: ${error}`);
+      log.error('Error getting user: ${error}');
       throw error;
     }
   }
@@ -240,7 +240,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      log.error(`Error getting user: ${error}`);
+      log.error('Error getting user: ${error}');
       throw error;
     }
   }
@@ -256,7 +256,7 @@ export class UserService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error deleting user: ${error}`);
+      log.error('Error deleting user: ${error}');
       throw error;
     }
   }
@@ -286,7 +286,7 @@ export class UserService {
 
       return { success: true };
     } catch (error) {
-      log.error(`Error deleting user: ${error}`);
+      log.error('Error deleting user: ${error}');
       throw error;
     }
   }
@@ -318,10 +318,10 @@ export class UserService {
           firstname: 'Admin',
           lastname: 'User',
         });
-        log.info(`Created initial admin user: ${defaultAdminUsername}`);
+        log.info('Created initial admin user: ${defaultAdminUsername}');
       }
     } catch (error) {
-      log.error(`Error creating initial admin: ${error}`);
+      log.error('Error creating initial admin: ${error}');
     }
   }
 

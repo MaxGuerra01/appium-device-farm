@@ -49,7 +49,7 @@ export async function authenticateUserWithAccessKey(accessKey: string, secretTok
 export async function getUserFromCapabilities(
   capabilities: Record<string, any>,
 ): Promise<Omit<User, 'password'>> {
-  debugLog(`Capabilities: ${JSON.stringify(capabilities['df:jwt'])}`);
+  debugLog('Capabilities: ${JSON.stringify(capabilities['df:jwt'])}');
   if (capabilities['df:jwt']) {
     const token = capabilities['df:jwt'];
     return await getUserFromToken(token);

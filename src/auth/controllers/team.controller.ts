@@ -20,7 +20,7 @@ export class TeamController {
       const team = await teamService.createTeam(name, description);
       return res.status(201).json(team);
     } catch (error: any) {
-      log.error(`Error creating team: ${error}`);
+      log.error('Error creating team: ${error}');
       return res.status(400).json({ message: error.message || 'Error creating team' });
     }
   }
@@ -33,7 +33,7 @@ export class TeamController {
       const teams = await teamService.getAllTeams();
       return res.status(200).json(teams);
     } catch (error: any) {
-      log.error(`Error getting teams: ${error}`);
+      log.error('Error getting teams: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting teams' });
     }
   }
@@ -52,7 +52,7 @@ export class TeamController {
       const team = await teamService.getTeamById(id);
       return res.status(200).json(team);
     } catch (error: any) {
-      log.error(`Error getting team: ${error}`);
+      log.error('Error getting team: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting team' });
     }
   }
@@ -72,7 +72,7 @@ export class TeamController {
       const team = await teamService.updateTeam(id, name, description);
       return res.status(200).json(team);
     } catch (error: any) {
-      log.error(`Error updating team: ${error}`);
+      log.error('Error updating team: ${error}');
       return res.status(400).json({ message: error.message || 'Error updating team' });
     }
   }
@@ -91,7 +91,7 @@ export class TeamController {
       await teamService.deleteTeam(id);
       return res.status(200).json({ message: 'Team deleted successfully' });
     } catch (error: any) {
-      log.error(`Error deleting team: ${error}`);
+      log.error('Error deleting team: ${error}');
       return res.status(400).json({ message: error.message || 'Error deleting team' });
     }
   }
@@ -112,7 +112,7 @@ export class TeamController {
       const teamMember = await teamService.addUserToTeam(add, teamId);
       return res.status(201).json(teamMember);
     } catch (error: any) {
-      log.error(`Error adding user to team: ${error}`);
+      log.error('Error adding user to team: ${error}');
       return res.status(400).json({ message: error.message || 'Error adding user to team' });
     }
   }
@@ -131,7 +131,7 @@ export class TeamController {
       const teams = await teamService.getTeamsForUser(userId);
       return res.status(200).json(teams);
     } catch (error: any) {
-      log.error(`Error getting teams for user: ${error}`);
+      log.error('Error getting teams for user: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting teams for user' });
     }
   }
@@ -152,7 +152,7 @@ export class TeamController {
       const teamDevice = await teamService.addDeviceToTeam(add, teamId);
       return res.status(201).json(teamDevice);
     } catch (error: any) {
-      log.error(`Error adding user to team: ${error}`);
+      log.error('Error adding user to team: ${error}');
       return res.status(400).json({ message: error.message || 'Error adding user to team' });
     }
   }

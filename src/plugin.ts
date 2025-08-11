@@ -111,7 +111,7 @@ class DevicePlugin extends BasePlugin {
     /* To fix cannot read properties `constructor` of undefined error due to changes in appium log */
     this.updateLogPrefix = null;
     // here, CLI Args are already pluginArgs. Different case for updateServer
-    log.debug(`📱 Plugin Args: ${JSON.stringify(cliArgs)}`);
+    log.debug('📱 Plugin Args: ${JSON.stringify(cliArgs)}');
     // plugin args will assign undefined value as well for bindHostOrIp
     this.pluginArgs = Object.assign({}, DefaultPluginArgs, cliArgs as unknown as IPluginArgs);
     // not pretty but will do for now
@@ -133,11 +133,7 @@ class DevicePlugin extends BasePlugin {
       await unblockDeviceMatchingFilter(deviceFilter);
     }
 
-    log.info(
-      `Unblocking device mapped with filter ${JSON.stringify(
-        deviceFilter,
-      )} onUnexpectedShutdown from server`,
-    );
+    log.info('Unblocking device mapped with filter onUnexpectedShutdown from server');
     await EventBus.fire(new UnexpectedServerShutdownEvent({ driver }));
   }
 
@@ -148,7 +144,7 @@ class DevicePlugin extends BasePlugin {
   ): Promise<void> {
     DevicePlugin.httpServer = httpServer;
 
-    log.debug(`📱 Update server with CLI Args: ${JSON.stringify(cliArgs)}`);
+    log.debug('📱 Update server with CLI Args: ${JSON.stringify(cliArgs)}');
     DevicePlugin.serverArgs = cliArgs;
     externalModule = await loadExternalModules();
     const pluginConfigs = cliArgs.plugin as PluginConfig;
@@ -180,7 +176,7 @@ class DevicePlugin extends BasePlugin {
     const hubArgument = pluginArgs.hub;
     DevicePlugin.NODE_ID = config.serverMetadata.id;
     DevicePlugin.IS_HUB = !pluginArgs.hub;
-    log.info('Cli Args: ' + JSON.stringify(cliArgs));
+    log.info('Cli Args: ');
 
     DevicePlugin.nodeBasePath = cliArgs.basePath;
 
@@ -188,7 +184,7 @@ class DevicePlugin extends BasePlugin {
       pluginArgs.bindHostOrIp = ip.address();
     }
 
-    log.debug(`📱 Update server with Plugin Args: ${JSON.stringify(pluginArgs)}`);
+    log.debug('📱 Update server with Plugin Args: ${JSON.stringify(pluginArgs)}');
 
     await initializeStorage();
     (await ATDRepository.DeviceModel).removeDataOnly();
@@ -196,7 +192,7 @@ class DevicePlugin extends BasePlugin {
     androidDeviceType = pluginArgs.androidDeviceType;
     iosDeviceType = pluginArgs.iosDeviceType;
     if (pluginArgs.proxy !== undefined) {
-      log.info(`Adding proxy for axios: ${JSON.stringify(pluginArgs.proxy)}`);
+      log.info('Adding proxy for axios: ');
       proxy = pluginArgs.proxy;
     } else {
       log.info('proxy is not required for axios');
@@ -233,7 +229,7 @@ class DevicePlugin extends BasePlugin {
     await addCLIArgs(cliArgs);
 
     if (hubArgument !== undefined) {
-      log.info(`📣📣📣 I'm a node and my hub is ${hubArgument}`);
+      log.info('📣📣📣 I m a node and my hub is ');
       DevicePlugin.apiClient = new DeviceFarmApiClient(
         pluginArgs.accessKey!,
         pluginArgs.token!,
@@ -243,7 +239,7 @@ class DevicePlugin extends BasePlugin {
       const isHubRunning = await isDeviceFarmRunning(hubArgument);
       if (!isHubRunning) {
         throw new Error(
-          `🛜 Unable to connect with hub in ${hubArgument}. Make the appium server is up and running.`,
+          `🛜 Unable to connect with hub in . Make the appium server is up and running.`,
         );
       }
 
@@ -271,7 +267,7 @@ class DevicePlugin extends BasePlugin {
         DevicePlugin.NODE_ID,
       );
       await NodeHealthMonitor.getInstance().start(NODE_HEALTH_MONITOR_INTERVAL);
-      log.info(`📣📣📣 I'm a hub and I'm listening on ${pluginArgs.bindHostOrIp}:${cliArgs.port}`);
+      log.info('📣📣📣 I m a hub and I m listening on ');
     }
 
     if (pluginArgs.cloud == undefined) {
@@ -309,7 +305,7 @@ class DevicePlugin extends BasePlugin {
       await refreshSimulatorState(pluginArgs, cliArgs.port);
     }
     log.info(
-      `📣📣📣 Device Farm Plugin will be served at 🔗 http://${pluginArgs.bindHostOrIp}:${cliArgs.port}/device-farm with id ${DevicePlugin.NODE_ID}`,
+      `📣📣📣 Device Farm Plugin will be served at 🔗`,
     );
   }
 
@@ -339,20 +335,20 @@ class DevicePlugin extends BasePlugin {
     jwpReqCaps: any,
     caps: ISessionCapability,
   ) {
-    log.debug(`📱 pluginArgs: ${JSON.stringify(this.pluginArgs)}`);
-    log.debug(`Receiving session request at host: ${this.pluginArgs.bindHostOrIp}`);
+    log.debug('📱 pluginArgs: ${JSON.stringify(this.pluginArgs)}');
+    log.debug('Receiving session request at host: ${this.pluginArgs.bindHostOrIp}');
     const {
       alwaysMatch: requiredCaps = {}, // If 'requiredCaps' is undefined, set it to an empty JSON object (#2.1)
       firstMatch: allFirstMatchCaps = [{}], // If 'firstMatch' is undefined set it to a singleton list with one empty object (#3.1)
     } = caps;
     const pendingSessionId = requiredCaps['appium:requestId'];
     delete requiredCaps['appium:requestId'];
-    log.debug(`📱 Creating temporary session capability_id: ${pendingSessionId}`);
+    log.debug('📱 Creating temporary session capability_id: ${pendingSessionId}');
 
     stripAppiumPrefixes(requiredCaps);
     stripAppiumPrefixes(allFirstMatchCaps);
     const mergedCapabilites = Object.assign({}, caps.firstMatch[0], caps.alwaysMatch);
-    log.info(`Merged Capabilities: ${JSON.stringify(mergedCapabilites, null, 2)}`);
+    log.info('Merged Capabilities: ');
     await addNewPendingSession({
       ...Object.assign({}, caps.firstMatch[0], caps.alwaysMatch),
       capability_id: pendingSessionId,
@@ -391,10 +387,10 @@ class DevicePlugin extends BasePlugin {
     );
     // if device is not on the same node, forward the session request. Unless hub is not defined then create session on the same node
     if (isRemoteOrCloudSession) {
-      log.debug(`📱${pendingSessionId} --- Forwarding session request to ${device.host}`);
+      log.debug('📱${pendingSessionId} --- Forwarding session request to ');
       caps['pendingSessionId'] = pendingSessionId;
       session = await this.forwardSessionRequest(device, caps, mergedCapabilites);
-      debugLog(`📱${pendingSessionId} --- Forwarded session response: ${JSON.stringify(session)}`);
+      debugLog('📱${pendingSessionId} --- Forwarded session response:');
     } else {
       log.debug('📱 Creating session on the same node');
       const sessionType = device.cloud
@@ -413,7 +409,7 @@ class DevicePlugin extends BasePlugin {
         device.realDevice &&
         device.nodeId === DevicePlugin.NODE_ID
       ) {
-        log.info(`📱 Forwarding ios port to real device ${device.udid} for manual interaction`);
+        log.info('📱 Forwarding ios port to real device for manual interaction');
         try {
           await DEVICE_CONNECTIONS_FACTORY.requestConnection(device.udid, device.mjpegServerPort, {
             usePortForwarding: true,
@@ -421,29 +417,29 @@ class DevicePlugin extends BasePlugin {
           });
         } catch (err) {
           /* Not required for now as the port forwarding is handled by xcuitest river itself */
-          log.warn(`Error while forwarding ios port to real device ${device.udid}. Error: ${err}`);
+          log.warn('Error while forwarding ios port to real device . Error: ');
         }
       }
 
-      debugLog(`📱 Session response: ${JSON.stringify(session)}`);
+      debugLog('📱 Session response: ');
     }
 
     // non-forwarded session can also be an error
-    log.debug(`📱 ${pendingSessionId} Session response: `, JSON.stringify(session));
+    log.debug('📱 Session response: ');
 
-    log.debug(`📱 Removing pending session with capability_id: ${pendingSessionId}`);
+    log.debug('📱 Removing pending session with capability_id: ');
     await removePendingSession(pendingSessionId);
 
     // Do we have valid session response?
     if (this.isCreateSessionResponseInternal(session)) {
-      log.debug(`${pendingSessionId} 📱 Session response is CreateSessionResponseInternal`);
+      log.debug(' 📱 Session response is CreateSessionResponseInternal');
 
       sanitizeSessionCapabilities(session.value[1]);
       const sessionId = (session as CreateSessionResponseInternal).value[0];
       const sessionResponse = (session as CreateSessionResponseInternal).value[1];
       const deviceFarmCapabilities = getDeviceFarmCapabilities(caps);
-      log.info(
-        `📱 ${pendingSessionId} ----- Device UDID ${device.udid} blocked for session ${sessionId}`,
+      log.debug(
+        '📱 ----- Device UDID  blocked for session '
       );
       const user =
         DevicePlugin.IS_HUB && this.pluginArgs.enableAuthentication
@@ -485,11 +481,7 @@ class DevicePlugin extends BasePlugin {
       } else {
         log.info('Skipping dashboard report');
       }
-      log.info(
-        sanitizeLog(
-          `📱 ${pendingSessionId} 📱 Updating Device ${device.udid} with session ID ${sessionId}`,
-        ),
-      );
+      log.info('📱 Updating Device with session ID ');
       if (device.platform.toLowerCase() === 'ios' && !isRemoteOrCloudSession) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -509,16 +501,16 @@ class DevicePlugin extends BasePlugin {
     } else {
       await unblockDevice(device.udid, device.host);
       log.info(
-        `${pendingSessionId} 📱 Device UDID ${device.udid} unblocked. Reason: Failed to create session`,
+        '${pendingSessionId} 📱 Device UDID ${device.udid} unblocked. Reason: Failed to create session'
       );
       this.throwProperError(session, device.host);
     }
-    debugLog(`${pendingSessionId} 📱 Returning session: ${JSON.stringify(session)}`);
+    debugLog('${pendingSessionId} 📱 Returning session: ${JSON.stringify(session)}');
     return session;
   }
 
   throwProperError(session: any, host: string) {
-    debugLog(`Inside throwProperError: ${JSON.stringify(session)}`);
+    debugLog('Inside throwProperError: ${JSON.stringify(session)}');
     if (session instanceof Error) {
       throw session;
     } else if (session.hasOwnProperty('error')) {
@@ -600,7 +592,7 @@ class DevicePlugin extends BasePlugin {
     }
 
     log.info(
-      `Creating session with desiredCapabilities: "${JSON.stringify(capabilitiesToCreateSession)}"`,
+      'Creating session with desiredCapabilities: "${JSON.stringify(capabilitiesToCreateSession)}"'
     );
 
     const config: any = {
@@ -622,17 +614,17 @@ class DevicePlugin extends BasePlugin {
       data: capabilitiesToCreateSession,
     };
 
-    //log.info(`Add proxy to axios config only if it is set: ${JSON.stringify(proxy)}`);
+    //log.info('Add proxy to axios config only if it is set: ${JSON.stringify(proxy)}');
     if (proxy != undefined) {
-      log.info(`Added proxy to axios config: ${JSON.stringify(proxy)}`);
+      log.info('Added proxy to axios config: ${JSON.stringify(proxy)}');
       config.httpsAgent = new HttpsProxyAgent(proxy);
       config.httpAgent = new HttpProxyAgent(proxy);
       config.proxy = false;
     }
 
-    log.info(`With axios config: "${JSON.stringify(config)}"`);
+    log.info('With axios config: "${JSON.stringify(config)}"');
     const createdSession: W3CNewSessionResponse | Error = await this.invokeSessionRequest(config);
-    debugLog(`📱 Session Creation response: ${JSON.stringify(createdSession)}`);
+    debugLog('📱 Session Creation response: ${JSON.stringify(createdSession)}');
     if (createdSession instanceof Error) {
       return createdSession;
     } else {
@@ -655,11 +647,11 @@ class DevicePlugin extends BasePlugin {
 
       // check if we have error in response by checking sessionDetails.value type
       if ('error' in sessionDetails.value) {
-        log.error(`Error while creating session: ${sessionDetails.value.error}`);
+        log.error('Error while creating session: ');
         errorMessage = sessionDetails.value.error as string;
       }
     } catch (error: AxiosError<any> | any) {
-      log.debug(`Received error from remote node: ${JSON.stringify(error)}`);
+      log.debug('Received error from remote node: ${JSON.stringify(error)}');
       if (error instanceof AxiosError) {
         errorMessage = JSON.stringify(error.response?.data);
       } else {
@@ -670,22 +662,20 @@ class DevicePlugin extends BasePlugin {
     // Actually errorMessage will be empty when axios is getting peer connection error/disconnected.
     // So, let's invert the situation and return error when sessionDetails is null
     if (_.isNil(sessionDetails)) {
-      log.error(`Error while creating session: ${errorMessage}`);
+      log.error('Error while creating session: ');
       if (_.isNil(errorMessage)) {
         errorMessage = 'Unknown error while creating session';
       }
       return new Error(errorMessage);
     } else {
       log.debug(
-        `📱 Session received with details: ${JSON.stringify(
-          !sessionDetails ? {} : sessionDetails,
-        )}`,
+        '📱 Session received with details: )}'
       );
 
       if (this.isW3CNewSessionResponse(sessionDetails)) {
         return sessionDetails as W3CNewSessionResponse;
       } else {
-        return new Error(`Unknown error while creating session: ${JSON.stringify(sessionDetails)}`);
+        return new Error('Unknown error while creating session: ${JSON.stringify(sessionDetails)}');
       }
     }
   }
@@ -703,14 +693,14 @@ class DevicePlugin extends BasePlugin {
       session_id: sessionId,
     });
     await unblockDeviceMatchingFilter({ session_id: sessionId });
-    log.info(`📱 Unblocking the device that is blocked for session ${sessionId}`);
+    log.info('📱 Unblocking the device that is blocked for session ${sessionId}');
     const res = await next();
     await EventBus.fire(new AfterSessionDeletedEvent({ sessionId: sessionId, device: device }));
     if (device?.platform === 'ios' && device.realDevice) {
       try {
         await DEVICE_CONNECTIONS_FACTORY.releaseConnection(device.udid, device.mjpegServerPort);
       } catch (err) {
-        log.warn(`Error while releasing connection for device ${device.udid}. Error: ${err}`);
+        log.warn('Error while releasing connection for device ${device.udid}. Error: ${err}');
       }
     }
     return res;

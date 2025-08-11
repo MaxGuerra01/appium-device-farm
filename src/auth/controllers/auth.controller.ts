@@ -28,7 +28,7 @@ export class AuthController {
 
       return res.status(201).json(user);
     } catch (error: any) {
-      log.error(`Error registering user: ${error}`);
+      log.error('Error registering user: ${error}');
       return res.status(400).json({ message: error.message || 'Error registering user' });
     }
   }
@@ -48,7 +48,7 @@ export class AuthController {
 
       return res.status(200).json(result);
     } catch (error) {
-      log.error(`Error logging in: ${error}`);
+      log.error('Error logging in: ${error}');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
   }
@@ -66,7 +66,7 @@ export class AuthController {
 
       return res.status(200).json(user);
     } catch (error: any) {
-      log.error(`Error getting current user: ${error}`);
+      log.error('Error getting current user: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting current user' });
     }
   }
@@ -90,7 +90,7 @@ export class AuthController {
 
       return res.status(200).json({ message: 'Password changed successfully' });
     } catch (error: any) {
-      log.error(`Error changing password: ${error}`);
+      log.error('Error changing password: ${error}');
       return res.status(400).json({ message: error.message || 'Error changing password' });
     }
   }
@@ -107,7 +107,7 @@ export class AuthController {
 
       return res.status(200).json({ message: 'User activated successfully' });
     } catch (error: any) {
-      log.error(`Error activating user: ${error}`);
+      log.error('Error activating user: ${error}');
       return res.status(400).json({ message: error.message || 'Error activating user' });
     }
   }
@@ -124,7 +124,7 @@ export class AuthController {
 
       return res.status(200).json({ message: 'User deactivated successfully' });
     } catch (error: any) {
-      log.error(`Error activating user: ${error}`);
+      log.error('Error activating user: ${error}');
       return res.status(400).json({ message: error.message || 'Error activating user' });
     }
   }

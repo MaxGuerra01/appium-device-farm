@@ -68,14 +68,14 @@ const getOptions = async () => {
 const getMobileProvisioningFile = async (mobileProvisioningFile?: string) => {
   if (mobileProvisioningFile) {
     if (!fs.existsSync(mobileProvisioningFile) || !fs.statSync(mobileProvisioningFile).isFile()) {
-      throw new Error(`Mobile provisioning file ${mobileProvisioningFile} does not exists`);
+      throw new Error(`Mobile provisioning file ${mobileProvisioningFile} does not exists');
     }
     return mobileProvisioningFile;
   } else {
     const provisionFileDir = await getProvisioningProfilePath();
 
     if (!fs.existsSync(provisionFileDir)) {
-      throw new Error(`Provisioning directory does not exist: ${provisionFileDir}`);
+      throw new Error(`Provisioning directory does not exist: ${provisionFileDir}');
     }
 
     const files = fs
@@ -116,14 +116,14 @@ const getMobileProvisioningFile = async (mobileProvisioningFile?: string) => {
         return d.uuid === prompt;
       }) || null;
 
-    return path.join(await getProvisioningProfilePath(), `${prompt}.mobileprovision`);
+    return path.join(await getProvisioningProfilePath(), `${prompt}.mobileprovision');
   }
 };
 
 const getWdaProject = async (wdaProjectPath?: string) => {
   if (wdaProjectPath) {
     if (!fs.existsSync(wdaProjectPath) || !fs.statSync(wdaProjectPath).isDirectory()) {
-      throw new Error(`Unable to find webdriver agent project in path ${wdaProjectPath}`);
+      throw new Error(`Unable to find webdriver agent project in path ${wdaProjectPath}');
     }
     return wdaProjectPath;
   }
@@ -146,7 +146,7 @@ async function buildWebDriverAgent(projectDir: string, logger: any) {
     return `${projectDir}/${WDA_BUILD_PATH}/WebDriverAgentRunner-Runner.app`;
   } catch (error) {
     console.log(error);
-    throw new Error(`❌ Error building WebDriverAgent: ${(error as any)?.message}`);
+    throw new Error(`❌ Error building WebDriverAgent: ${(error as any)?.message}');
   }
 }
 
@@ -160,8 +160,8 @@ async function zipPayloadDirectory(
     const archive = archiver('zip', { zlib: { level: 9 } });
 
     output.on('close', () => {
-      observer.next(`Zipped ${archive.pointer()} total bytes`);
-      observer.next(`Archive has been written to ${outputZipPath}`);
+      observer.next(`Zipped ${archive.pointer()} total bytes');
+      observer.next(`Archive has been written to ${outputZipPath}');
       resolve();
     });
 
@@ -220,7 +220,7 @@ async function zipPayloadDirectory(
               })
               .then(() => {
                 observer.next('🚚 Moving .app file to Payload directory...');
-                return execAsync(`mv ${context.wdaAppPath} ${payloadDirectory}`);
+                return execAsync(`mv ${context.wdaAppPath} ${payloadDirectory}');
               })
               .then(() => {
                 observer.next('Packing Payload directory...');

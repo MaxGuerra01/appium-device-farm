@@ -27,14 +27,14 @@ export default class NodeDevices {
         log.warn('Something went wrong!!');
       }
     } catch (error) {
-      log.error(`Unable to update device with proxySession Information. Reason: ${error}`);
+      log.error('Unable to update device with proxySession Information. Reason: ${error}');
     }
   }
 
   async postDevicesToHub(devices: IDevice[] | DeviceUpdate[], arg: string) {
     // DeviceWithPath -> new device
     // DeviceUpdate -> removed device
-    log.info(`Updating remote android devices ${this.host}/device-farm/api/register`);
+    log.info('Updating remote android devices ${this.host}/device-farm/api/register');
     try {
       const status = (
         await axios.post(`${this.host}/device-farm/api/register`, devices, {
@@ -46,23 +46,23 @@ export default class NodeDevices {
       if (status === 200) {
         if (arg === 'add') {
           devices.forEach((device: any) => {
-            log.info(`Pushed devices to hub ${device.udid} ${device.mjpegServerPort}`);
+            log.info('Pushed devices to hub ${device.udid} ${device.mjpegServerPort}');
           });
         } else {
           devices.forEach((device: any) => {
-            log.info(`Removed device and pushed information to hub ${device.udid}`);
+            log.info('Removed device and pushed information to hub ${device.udid}');
           });
         }
       } else {
         log.warn('Something went wrong!!');
       }
     } catch (error) {
-      log.error(`Unable to push devices update to hub. Reason: ${error}`);
+      log.error('Unable to push devices update to hub. Reason: ${error}');
     }
   }
 
   async unblockDevice(filter: IDeviceFilterOptions) {
-    log.info(`Unblocking device ${this.host}/device-farm/api/unblock`);
+    log.info('Unblocking device ${this.host}/device-farm/api/unblock');
     try {
       const status = (
         await axios.post(`${this.host}/device-farm/api/unblock`, filter, {
@@ -72,12 +72,12 @@ export default class NodeDevices {
         })
       ).status;
       if (status === 200) {
-        log.info(`Unblocked device with filter: ${filter}`);
+        log.info('Unblocked device with filter: ${filter}');
       } else {
         log.warn('Something went wrong!!');
       }
     } catch (error) {
-      log.error(`Unable to unblock device. Reason: ${error}`);
+      log.error('Unable to unblock device. Reason: ${error}');
     }
   }
 }

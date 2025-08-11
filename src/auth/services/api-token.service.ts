@@ -37,7 +37,7 @@ export class ApiTokenService {
 
       return apiToken;
     } catch (error) {
-      log.error(`Error creating API token: ${error}`);
+      log.error('Error creating API token: ${error}');
       throw error;
     }
   }
@@ -66,7 +66,7 @@ export class ApiTokenService {
         },
       });
     } catch (error) {
-      log.error(`Error deleting API token: ${error}`);
+      log.error('Error deleting API token: ${error}');
       throw error;
     }
   }
@@ -87,7 +87,7 @@ export class ApiTokenService {
 
       return tokens;
     } catch (error) {
-      log.error(`Error listing API tokens: ${error}`);
+      log.error('Error listing API tokens: ${error}');
       throw error;
     }
   }

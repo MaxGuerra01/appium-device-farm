@@ -16,7 +16,7 @@ export class UserController {
       const users = await userService.getAllUsers();
       return res.status(200).json(users);
     } catch (error: any) {
-      log.error(`Error getting users: ${error}`);
+      log.error('Error getting users: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting users' });
     }
   }
@@ -35,7 +35,7 @@ export class UserController {
       const user = await userService.getUserById(id);
       return res.status(200).json(user);
     } catch (error: any) {
-      log.error(`Error getting user: ${error}`);
+      log.error('Error getting user: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting user' });
     }
   }
@@ -60,7 +60,7 @@ export class UserController {
       await userService.deleteUser(id);
       return res.status(200).json({ message: 'User deleted successfully' });
     } catch (error: any) {
-      log.error(`Error deleting user: ${error}`);
+      log.error('Error deleting user: ${error}');
       return res.status(400).json({ message: error.message || 'Error deleting user' });
     }
   }
@@ -91,7 +91,7 @@ export class UserController {
       await userService.updateUser(id, { firstname, lastname, role, password });
       return res.status(200).json({ message: 'User details updated successfully' });
     } catch (error: any) {
-      log.error(`Error updating user: ${error}`);
+      log.error('Error updating user: ${error}');
       return res.status(400).json({ message: error.message || 'Error updating user' });
     }
   }

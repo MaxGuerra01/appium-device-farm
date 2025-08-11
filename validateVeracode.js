@@ -21,7 +21,7 @@ const targets = [
 function analyzeFile(target) {
   const filePath = path.join(__dirname, target.file);
   if (!fs.existsSync(filePath)) {
-    console.warn(`[NO ENCONTRADO] ${target.file}`);
+    console.warn(`[NO ENCONTRADO] ${target.file}');
     return;
   }
 
@@ -30,14 +30,14 @@ function analyzeFile(target) {
   lines.forEach((line, i) => {
     target.checks.forEach(term => {
       if (line.includes(term) && !line.includes('sanitizeLog') && !line.includes('// ok')) {
-        console.log(`[⚠️ Posible revisión] ${target.file}:${i + 1} => ${line.trim()}`);
+        console.log(`[⚠️ Posible revisión] ${target.file}:${i + 1} => ${line.trim()}');
         flagged = true;
       }
     });
   });
 
   if (!flagged) {
-    console.log(`[✅ Validado] ${target.file}`);
+    console.log(`[✅ Validado] ${target.file}');
   }
 }
 

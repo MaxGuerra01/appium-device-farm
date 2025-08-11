@@ -26,7 +26,7 @@ export class DeviceAllocationController {
       const allocation = await deviceAllocationService.allocateDeviceToTeam(deviceUdid, teamId);
       return res.status(201).json(allocation);
     } catch (error: any) {
-      log.error(`Error allocating device to team: ${error}`);
+      log.error('Error allocating device to team: ${error}');
       return res.status(400).json({ message: error.message || 'Error allocating device to team' });
     }
   }
@@ -45,7 +45,7 @@ export class DeviceAllocationController {
       await deviceAllocationService.deallocateDeviceFromTeam(deviceUdid, teamId);
       return res.status(200).json({ message: 'Device deallocated from team successfully' });
     } catch (error: any) {
-      log.error(`Error deallocating device from team: ${error}`);
+      log.error('Error deallocating device from team: ${error}');
       return res
         .status(400)
         .json({ message: error.message || 'Error deallocating device from team' });
@@ -60,7 +60,7 @@ export class DeviceAllocationController {
       // const allocations = await deviceAllocationService.getAllDeviceAllocations();
       return res.status(200).json([]);
     } catch (error: any) {
-      log.error(`Error getting device allocations: ${error}`);
+      log.error('Error getting device allocations: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting device allocations' });
     }
   }
@@ -79,7 +79,7 @@ export class DeviceAllocationController {
       // const allocations = await deviceAllocationService.getDeviceAllocationsForTeam(teamId);
       return res.status(200).json([]);
     } catch (error: any) {
-      log.error(`Error getting device allocations for team: ${error}`);
+      log.error('Error getting device allocations for team: ${error}');
       return res
         .status(400)
         .json({ message: error.message || 'Error getting device allocations for team' });
@@ -100,7 +100,7 @@ export class DeviceAllocationController {
       const teams = await deviceAllocationService.getTeamsForDevice(deviceUdid);
       return res.status(200).json(teams);
     } catch (error: any) {
-      log.error(`Error getting teams for device: ${error}`);
+      log.error('Error getting teams for device: ${error}');
       return res.status(400).json({ message: error.message || 'Error getting teams for device' });
     }
   }
@@ -126,7 +126,7 @@ export class DeviceAllocationController {
       );
       return res.status(200).json({ hasAccess });
     } catch (error: any) {
-      log.error(`Error checking user access to device: ${error}`);
+      log.error('Error checking user access to device: ${error}');
       return res
         .status(400)
         .json({ message: error.message || 'Error checking user access to device' });
@@ -145,7 +145,7 @@ export class DeviceAllocationController {
       const devices = await deviceAllocationService.getAccessibleDevicesForUser(req.user.userId);
       return res.status(200).json(devices);
     } catch (error: any) {
-      log.error(`Error getting accessible devices for user: ${error}`);
+      log.error('Error getting accessible devices for user: ${error}');
       return res
         .status(400)
         .json({ message: error.message || 'Error getting accessible devices for user' });
